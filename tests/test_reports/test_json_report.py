@@ -2,7 +2,7 @@
 
 import json
 
-from thakaamed_dicom.reports.json_report import JSONReportBuilder
+from dicom_anonymizer.reports.json_report import JSONReportBuilder
 
 
 class TestJSONReportBuilder:

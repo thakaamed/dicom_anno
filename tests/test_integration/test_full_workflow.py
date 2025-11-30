@@ -5,8 +5,8 @@ import json
 from click.testing import CliRunner
 from pydicom import dcmread
 
+from dicom_anonymizer.cli.main import main
 from tests.fixtures.dicom_factory import DicomFactory
-from thakaamed_dicom.cli.main import main
 
 
 class TestFullWorkflow:

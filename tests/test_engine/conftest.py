@@ -1,11 +1,10 @@
 """Test fixtures for engine tests."""
 
-
 import pytest
 from pydicom import Dataset
 from pydicom.uid import ImplicitVRLittleEndian, generate_uid
 
-from thakaamed_dicom.config.models import (
+from dicom_anonymizer.config.models import (
     ActionCode,
     DateHandling,
     PresetConfig,

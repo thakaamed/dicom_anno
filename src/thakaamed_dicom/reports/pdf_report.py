@@ -83,36 +83,16 @@ class PDFReportBuilder:
         self.logo_path = self._get_logo_path()
 
     def _get_logo_path(self) -> Path | None:
-        """Get path to THAKAAMED logo."""
-        # Try multiple logo locations
-        possible_paths = [
-            # Project root thakaamed_logos folder
-            Path(__file__).parent.parent.parent.parent.parent / "thakaamed_logos" / "thakaa_logo_1024.png",
-            Path(__file__).parent.parent.parent.parent.parent / "thakaamed_logos" / "logo_white_text.png",
-            # Reports assets folder
-            Path(__file__).parent / "assets" / "logo.png",
-            Path(__file__).parent / "assets" / "thakaa_logo_1024.png",
-        ]
-        
-        for path in possible_paths:
-            if path.exists():
-                return path
-        
-        # Try importlib.resources for installed package
+        """Get path to logo using importlib.resources (works when installed)."""
         try:
             from importlib.resources import files
 
-            assets = files("thakaamed_dicom.reports.assets")
+            assets = files("dicom_anonymizer.reports.assets")
             logo_file = assets.joinpath("logo.png")
-            if hasattr(logo_file, "is_file") and logo_file.is_file():
-                return Path(str(logo_file))
-            with assets.joinpath("logo.png").open("rb"):
-                pass
-            return logo_file
+            # For Python 3.9+, convert Traversable to Path
+            return Path(str(logo_file))
         except Exception:
-            pass
-
-        return None
+            return None
 
     def _create_styles(self):
         """Create custom paragraph styles with THAKAAMED purple/lavender branding."""

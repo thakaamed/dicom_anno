@@ -3,9 +3,9 @@
 import pytest
 from pydicom import dcmread
 
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
 from tests.fixtures.dicom_factory import DicomFactory
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
 
 
 class TestDicomPS315Compliance:
@@ -99,9 +99,7 @@ class TestDicomPS315Compliance:
         assert hasattr(ds, "DeidentificationMethod")
         assert ds.DeidentificationMethod != ""
 
-    def test_private_tags_removed(
-        self, sfda_processor, sample_dicom_with_private, tmp_path
-    ):
+    def test_private_tags_removed(self, sfda_processor, sample_dicom_with_private, tmp_path):
         """All private tags are removed."""
         output = tmp_path / "output.dcm"
         sfda_processor.process_file(sample_dicom_with_private, output)

@@ -1,7 +1,6 @@
 """Tests for validate command."""
 
-
-from thakaamed_dicom.cli.main import main
+from dicom_anonymizer.cli.main import main
 
 
 class TestValidateCommand:
@@ -42,9 +41,7 @@ class TestValidateCommand:
 
     def test_validate_custom_config(self, cli_runner, sample_config_file):
         """Validate command accepts custom config file."""
-        result = cli_runner.invoke(
-            main, ["validate", "--config", str(sample_config_file)]
-        )
+        result = cli_runner.invoke(main, ["validate", "--config", str(sample_config_file)])
         assert result.exit_code == 0
         assert "valid" in result.output.lower()
 

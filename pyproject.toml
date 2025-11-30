@@ -3,11 +3,11 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "thakaamed-dicom"
-version = "1.0.0"
-description = "THAKAAMED DICOM Anonymizer - Professional medical imaging de-identification for Saudi healthcare"
+name = "dicom_anonymizer"
+version = "1.0.1"
+description = "Professional DICOM medical imaging de-identification tool"
 readme = "README.md"
-license = {text = "CC BY-NC-ND 4.0 (Non-Commercial Research Only)"}
+license = {text = "MIT"}
 requires-python = ">=3.10"
 authors = [
     { name = "THAKAAMED AI", email = "info@thakaamed.com" }
@@ -25,22 +25,20 @@ keywords = [
     "gdpr",
     "pdpl",
     "saudi-arabia",
-    "vision-2030",
-    "thakaamed"
+    "vision-2030"
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Healthcare Industry",
     "Intended Audience :: Science/Research",
-    "License :: Other/Proprietary License",
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Medical Science Apps.",
-    "Private :: Do Not Upload",
 ]
 dependencies = [
     "click>=8.1",
@@ -49,6 +47,7 @@ dependencies = [
     "pyyaml>=6.0",
     "pydicom>=2.4",
     "reportlab>=4.0",
+    "pillow>=10.0",
 ]
 
 [project.optional-dependencies]
@@ -58,10 +57,12 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.0",
     "types-PyYAML",
+    "build",
+    "twine",
 ]
 
 [project.scripts]
-thakaamed-dicom = "thakaamed_dicom.cli.main:main"
+dicom-anonym = "dicom_anonymizer.cli.main:main"
 
 [project.urls]
 Homepage = "https://github.com/thakaamed/dicom-anonymizer"
@@ -69,7 +70,17 @@ Documentation = "https://thakaamed.github.io/dicom-anonymizer"
 Repository = "https://github.com/thakaamed/dicom-anonymizer"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/thakaamed_dicom"]
+packages = ["src/dicom_anonymizer"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src" = ""
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/dicom_anonymizer/**/*.py",
+    "src/dicom_anonymizer/**/*.yaml",
+    "src/dicom_anonymizer/**/*.png",
+]
 
 [tool.ruff]
 line-length = 100
@@ -92,7 +103,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["thakaamed_dicom"]
+known-first-party = ["dicom_anonymizer"]
 
 [tool.mypy]
 python_version = "3.10"
@@ -107,7 +118,7 @@ python_functions = ["test_*"]
 addopts = "-v --tb=short"
 
 [tool.coverage.run]
-source = ["src/thakaamed_dicom"]
+source = ["src/dicom_anonymizer"]
 branch = true
 
 [tool.coverage.report]

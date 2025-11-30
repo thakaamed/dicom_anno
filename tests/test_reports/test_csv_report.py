@@ -2,7 +2,7 @@
 
 import csv
 
-from thakaamed_dicom.reports.csv_report import CSVReportBuilder
+from dicom_anonymizer.reports.csv_report import CSVReportBuilder
 
 
 class TestCSVReportBuilder:

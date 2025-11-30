@@ -3,7 +3,7 @@
 import pytest
 from pydantic import ValidationError
 
-from thakaamed_dicom.config.models import (
+from dicom_anonymizer.config.models import (
     ActionCode,
     AppConfig,
     DateHandling,

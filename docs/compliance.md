@@ -1,10 +1,10 @@
 # Compliance Documentation
 
-Detailed compliance information for THAKAAMED DICOM Anonymizer.
+Detailed compliance information for DICOM Anonymizer.
 
 ## Overview
 
-THAKAAMED DICOM Anonymizer is designed to meet the requirements of multiple healthcare data protection standards:
+DICOM Anonymizer is designed to meet the requirements of multiple healthcare data protection standards:
 
 - **DICOM PS3.15**: Basic Application Level Confidentiality Profile
 - **HIPAA Safe Harbor**: US healthcare privacy de-identification method

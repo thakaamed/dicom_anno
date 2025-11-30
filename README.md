@@ -1,20 +1,21 @@
 <div align="center">
 
-# 🏥 THAKAAMED DICOM Anonymizer
+# 🏥 DICOM Anonymizer
 
 ### مُجهِّز بيانات DICOM الطبية
 
-**Empowering Saudi Healthcare Research with Privacy-First Medical Imaging**
+**Empowering Healthcare Research with Privacy-First Medical Imaging**
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI version](https://img.shields.io/badge/pypi-v1.0.1-blue.svg)](https://pypi.org/project/dicom_anonymizer/)
 [![SFDA Compliant](https://img.shields.io/badge/SFDA-Compliant-006C35.svg)](https://www.sfda.gov.sa/)
 [![SDAIA Ready](https://img.shields.io/badge/SDAIA-PDPL_Ready-006C35.svg)](https://sdaia.gov.sa/)
 [![DICOM PS3.15](https://img.shields.io/badge/DICOM-PS3.15-orange.svg)](https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_e.html)
-[![License: Non-Commercial](https://img.shields.io/badge/License-Research_Free-purple.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-🇸🇦 **Built in Saudi Arabia for Saudi Healthcare** 🇸🇦
+🇸🇦 **Built in Saudi Arabia for Global Healthcare** 🇸🇦
 
 *Accelerating Vision 2030 Healthcare & AI Transformation*
 
@@ -24,11 +25,11 @@
 
 ---
 
-## 🌟 For Saudi Researchers & Healthcare Innovators
+## 🌟 For Researchers & Healthcare Innovators
 
-THAKAAMED DICOM Anonymizer is purpose-built to help **Saudi researchers, hospitals, and AI teams** unlock the power of medical imaging data while maintaining the highest standards of patient privacy and regulatory compliance.
+DICOM Anonymizer is purpose-built to help **researchers, hospitals, and AI teams** unlock the power of medical imaging data while maintaining the highest standards of patient privacy and regulatory compliance.
 
-> **"Enabling world-class medical AI research in the Kingdom, ethically and compliantly."**
+> **"Enabling world-class medical AI research, ethically and compliantly."**
 
 ### 🏛️ Saudi Regulatory Compliance First
 
@@ -51,7 +52,7 @@ THAKAAMED DICOM Anonymizer is purpose-built to help **Saudi researchers, hospita
 
 ## Overview
 
-THAKAAMED DICOM Anonymizer is a professional-grade, cross-platform tool for de-identifying DICOM medical imaging files. Built specifically for Saudi healthcare institutions, it enables:
+DICOM Anonymizer is a professional-grade, cross-platform tool for de-identifying DICOM medical imaging files. Built specifically for healthcare institutions, it enables:
 
 - **🔬 Research Excellence**: Safely share medical imaging data for AI/ML research
 - **🏥 Hospital Data Export**: Export anonymized studies for multi-center collaborations
@@ -69,7 +70,7 @@ THAKAAMED DICOM Anonymizer is a professional-grade, cross-platform tool for de-i
 | **Parallel Processing** | Process thousands of DICOM files in minutes |
 | **Offline Capable** | Works in air-gapped hospital networks |
 
-### Why THAKAAMED?
+### Why DICOM Anonymizer?
 
 - 🇸🇦 **Saudi-First Design**: Built with SFDA/SDAIA/PDPL compliance as the foundation
 - 🔒 **Privacy by Design**: No cloud uploads, 100% local processing
@@ -79,11 +80,17 @@ THAKAAMED DICOM Anonymizer is a professional-grade, cross-platform tool for de-i
 
 ## Quick Start
 
-### Installation (Online)
+### Installation from PyPI
+
+```bash
+pip install dicom_anonymizer
+```
+
+### Installation from Source
 
 ```bash
 # Clone/navigate to the project
-cd DICOM-ANNO
+cd dicom_anno
 
 # Create virtual environment and install (using uv - recommended)
 uv venv
@@ -96,6 +103,12 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
+### Check Version
+
+```bash
+dicom-anonym --version
+```
+
 ---
 
 ## 🔒 Offline Installation (Air-Gapped / No Internet)
@@ -106,7 +119,7 @@ For healthcare environments without internet access, follow these steps:
 
 ```bash
 # Navigate to project directory
-cd DICOM-ANNO
+cd dicom_anno
 
 # Create a directory to store all dependencies
 mkdir -p offline_packages
@@ -118,7 +131,7 @@ pip download -d ./offline_packages -r requirements.txt
 pip download -d ./offline_packages pip setuptools wheel build
 
 # Create a distributable archive (optional)
-tar -czvf thakaamed-dicom-offline.tar.gz \
+tar -czvf dicom-anonymizer-offline.tar.gz \
     offline_packages/ \
     src/ \
     pyproject.toml \
@@ -130,14 +143,14 @@ tar -czvf thakaamed-dicom-offline.tar.gz \
 ### Step 2: Transfer to Offline Machine
 
 Transfer the following to the air-gapped machine via USB/secure transfer:
-- `thakaamed-dicom-offline.tar.gz` (or the entire `DICOM-ANNO` folder with `offline_packages/`)
+- `dicom-anonymizer-offline.tar.gz` (or the entire folder with `offline_packages/`)
 
 ### Step 3: Install on Offline Machine
 
 ```bash
 # Extract if using archive
-tar -xzvf thakaamed-dicom-offline.tar.gz
-cd DICOM-ANNO
+tar -xzvf dicom-anonymizer-offline.tar.gz
+cd dicom_anno
 
 # Create virtual environment
 python -m venv .venv
@@ -154,25 +167,25 @@ pip install --no-index --find-links=./offline_packages pip setuptools wheel
 # Install all dependencies from offline packages
 pip install --no-index --find-links=./offline_packages -r requirements.txt
 
-# Install the THAKAAMED DICOM Anonymizer
+# Install the DICOM Anonymizer
 pip install --no-index --find-links=./offline_packages -e .
 
 # Verify installation
-thakaamed-dicom version
+dicom-anonym --version
 ```
 
 ### Alternative: Single Wheel Distribution
 
 #### On machine WITH internet:
 ```bash
-cd DICOM-ANNO
+cd dicom_anno
 
 # Build the wheel
 pip install build
 python -m build
 
 # The wheel will be in dist/
-# e.g., dist/thakaamed_dicom-1.0.0-py3-none-any.whl
+# e.g., dist/dicom_anonymizer-1.0.1-py3-none-any.whl
 
 # Download dependencies
 mkdir -p dist/deps
@@ -185,17 +198,17 @@ pip download -d ./dist/deps pydicom pyyaml click rich reportlab pillow
 pip install --no-index --find-links=./dist/deps pydicom pyyaml click rich reportlab pillow
 
 # Install the wheel
-pip install --no-index ./dist/thakaamed_dicom-1.0.0-py3-none-any.whl
+pip install --no-index ./dist/dicom_anonymizer-1.0.1-py3-none-any.whl
 ```
 
 ### Windows Offline Installation
 
 ```powershell
 # Extract archive
-Expand-Archive -Path thakaamed-dicom-offline.zip -DestinationPath C:\thakaamed
+Expand-Archive -Path dicom-anonymizer-offline.zip -DestinationPath C:\dicom_anon
 
 # Navigate to directory
-cd C:\thakaamed\DICOM-ANNO
+cd C:\dicom_anon
 
 # Create virtual environment
 python -m venv .venv
@@ -209,23 +222,23 @@ pip install --no-index --find-links=.\offline_packages -r requirements.txt
 pip install --no-index --find-links=.\offline_packages -e .
 
 # Verify
-thakaamed-dicom version
+dicom-anonym --version
 ```
 
 ### Verify Offline Installation
 
 ```bash
 # Check version
-thakaamed-dicom version
+dicom-anonym --version
 
 # List presets (no internet required)
-thakaamed-dicom presets
+dicom-anonym presets
 
 # Validate a preset
-thakaamed-dicom validate --preset sfda_safe_harbor
+dicom-anonym validate --preset sfda_safe_harbor
 
 # Test anonymization
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./test_dicom/ \
     -o ./test_output/ \
     -p sfda_safe_harbor \
@@ -250,16 +263,17 @@ thakaamed-dicom anonymize \
 
 ```bash
 # Anonymize a directory of DICOM files
-thakaamed-dicom anonymize --input /path/to/dicom --output /path/to/output --preset sfda_safe_harbor
+dicom-anonym anonymize --input /path/to/dicom --output /path/to/output --preset sfda_safe_harbor
 
 # List available presets
-thakaamed-dicom presets
+dicom-anonym presets
 
 # Validate a preset configuration
-thakaamed-dicom validate --preset research
+dicom-anonym validate --preset research
 
 # Show version
-thakaamed-dicom version
+dicom-anonym --version
+dicom-anonym version
 ```
 
 ---
@@ -270,7 +284,7 @@ thakaamed-dicom version
 
 #### SFDA Safe Harbor (Maximum Privacy)
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/patient_scan.dcm \
     -o ./anonymized_output/anon_scan.dcm \
     -p sfda_safe_harbor
@@ -278,7 +292,7 @@ thakaamed-dicom anonymize \
 
 #### Research Preset (Keeps Dates Shifted)
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/patient_scan.dcm \
     -o ./anonymized_output/research_scan.dcm \
     -p research \
@@ -287,7 +301,7 @@ thakaamed-dicom anonymize \
 
 #### Full Anonymization (Maximum Removal)
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/patient_scan.dcm \
     -o ./anonymized_output/full_anon_scan.dcm \
     -p full_anonymization
@@ -297,7 +311,7 @@ thakaamed-dicom anonymize \
 
 #### Process All DICOM Files in a Folder
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/ \
     -o ./anonymized_output/ \
     -p sfda_safe_harbor
@@ -305,7 +319,7 @@ thakaamed-dicom anonymize \
 
 #### With More Workers (Faster Processing)
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/ \
     -o ./anonymized_output/ \
     -p sfda_safe_harbor \
@@ -314,7 +328,7 @@ thakaamed-dicom anonymize \
 
 #### Sequential Processing (No Parallel)
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/ \
     -o ./anonymized_output/ \
     -p sfda_safe_harbor \
@@ -325,7 +339,7 @@ thakaamed-dicom anonymize \
 
 #### Generate All Reports (PDF + JSON + CSV)
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/ \
     -o ./anonymized_output/ \
     -p sfda_safe_harbor \
@@ -334,7 +348,7 @@ thakaamed-dicom anonymize \
 
 #### Generate Only PDF Report
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/ \
     -o ./anonymized_output/ \
     -p sfda_safe_harbor \
@@ -343,7 +357,7 @@ thakaamed-dicom anonymize \
 
 #### Generate Only JSON Report
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/ \
     -o ./anonymized_output/ \
     -p sfda_safe_harbor \
@@ -352,7 +366,7 @@ thakaamed-dicom anonymize \
 
 #### No Reports (Fast Processing)
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/ \
     -o ./anonymized_output/ \
     -p sfda_safe_harbor \
@@ -361,7 +375,7 @@ thakaamed-dicom anonymize \
 
 #### Custom Report Directory
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/ \
     -o ./anonymized_output/ \
     -p sfda_safe_harbor \
@@ -372,7 +386,7 @@ thakaamed-dicom anonymize \
 
 #### Dry Run (Preview Without Writing Files)
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./dicom_files/ \
     -o ./anonymized_output/ \
     -p sfda_safe_harbor \
@@ -383,37 +397,38 @@ thakaamed-dicom anonymize \
 
 #### List All Available Presets
 ```bash
-thakaamed-dicom presets
+dicom-anonym presets
 ```
 
 #### Validate a Built-in Preset
 ```bash
-thakaamed-dicom validate --preset sfda_safe_harbor
-thakaamed-dicom validate --preset research
-thakaamed-dicom validate --preset full_anonymization
+dicom-anonym validate --preset sfda_safe_harbor
+dicom-anonym validate --preset research
+dicom-anonym validate --preset full_anonymization
 ```
 
 #### Validate a Custom YAML Config
 ```bash
-thakaamed-dicom validate --config ./my_custom_preset.yaml
+dicom-anonym validate --config ./my_custom_preset.yaml
 ```
 
 #### Generate Report from Existing JSON Audit
 ```bash
-thakaamed-dicom report \
+dicom-anonym report \
     --from-json ./reports/anonymization_report_20240115.json \
     --format pdf
 ```
 
 #### Show Version
 ```bash
-thakaamed-dicom version
+dicom-anonym --version
+dicom-anonym version
 ```
 
 #### Show Help
 ```bash
-thakaamed-dicom --help
-thakaamed-dicom anonymize --help
+dicom-anonym --help
+dicom-anonym anonymize --help
 ```
 
 ---
@@ -422,7 +437,7 @@ thakaamed-dicom anonymize --help
 
 ```
 ---------------------------------------------
-  THAKAAMED DICOM Anonymizer
+  DICOM Anonymizer
 ---------------------------------------------
 
 Input: /path/to/dicom
@@ -462,7 +477,7 @@ Anonymization complete! Files saved to /path/to/output
 ### anonymize
 
 ```bash
-thakaamed-dicom anonymize [OPTIONS]
+dicom-anonym anonymize [OPTIONS]
 
 Options:
   -i, --input PATH          Input DICOM file or directory (required)
@@ -480,20 +495,20 @@ Options:
 ### validate
 
 ```bash
-thakaamed-dicom validate --preset NAME
-thakaamed-dicom validate --config PATH
+dicom-anonym validate --preset NAME
+dicom-anonym validate --config PATH
 ```
 
 ### presets
 
 ```bash
-thakaamed-dicom presets  # List all available presets
+dicom-anonym presets  # List all available presets
 ```
 
 ### report
 
 ```bash
-thakaamed-dicom report --from-json audit.json --format pdf
+dicom-anonym report --from-json audit.json --format pdf
 ```
 
 ## Documentation
@@ -507,8 +522,8 @@ thakaamed-dicom report --from-json audit.json --format pdf
 ## Python API
 
 ```python
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
 
 # Load preset
 preset = load_preset("sfda_safe_harbor")
@@ -534,7 +549,7 @@ print(f"Processed: {stats.files_processed}")
 
 ### 🇸🇦 Saudi Arabia (Primary)
 
-THAKAAMED DICOM Anonymizer is designed with **Saudi regulatory compliance as the foundation**:
+DICOM Anonymizer is designed with **Saudi regulatory compliance as the foundation**:
 
 | Authority | Regulation | Status |
 |-----------|------------|--------|
@@ -556,7 +571,7 @@ THAKAAMED DICOM Anonymizer is designed with **Saudi regulatory compliance as the
 All processed files include DICOM compliance markers:
 ```
 PatientIdentityRemoved (0012,0062) = "YES"
-DeidentificationMethod (0012,0063) = "THAKAAMED - SFDA Safe Harbor"
+DeidentificationMethod (0012,0063) = "DICOM Anonymizer - SFDA Safe Harbor"
 ```
 
 ### UID Remapping
@@ -568,26 +583,13 @@ UIDs are consistently remapped using:
 
 ## License
 
-**Non-Commercial Research License** (CC BY-NC-ND 4.0 with Additional Restrictions)
+MIT License
 
-This software is provided for **RESEARCH AND EDUCATIONAL PURPOSES ONLY**.
+Copyright (c) 2024 THAKAAMED AI
 
-### You MAY:
-- Use for academic research and publications
-- Use for educational purposes and learning
-- Study and learn from the source code
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-### You MAY NOT:
-- Use for commercial purposes
-- Use in production healthcare environments
-- Sell, sublicense, or redistribute
-- Create derivative works
-
-### Commercial Licensing
-
-For commercial use, production deployment, or healthcare facility integration, please contact:
-
-**Email:** licensing@thakaamed.com | **Web:** https://thakaamed.ai/licensing
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 See [LICENSE](LICENSE) for full terms.
 
@@ -619,8 +621,8 @@ See [LICENSE](LICENSE) for full terms.
 
 ---
 
-*Empowering Saudi researchers to lead the future of medical AI*
+*Empowering researchers to lead the future of medical AI*
 
-*تمكين الباحثين السعوديين لقيادة مستقبل الذكاء الاصطناعي الطبي*
+*تمكين الباحثين لقيادة مستقبل الذكاء الاصطناعي الطبي*
 
 </div>

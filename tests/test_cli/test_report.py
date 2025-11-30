@@ -1,13 +1,12 @@
 """Tests for report command."""
 
-
 from datetime import datetime
 
 from click.testing import CliRunner
 
-from thakaamed_dicom.cli.main import main
-from thakaamed_dicom.reports.json_report import JSONReportBuilder
-from thakaamed_dicom.reports.models import FileRecord, ReportData
+from dicom_anonymizer.cli.main import main
+from dicom_anonymizer.reports.json_report import JSONReportBuilder
+from dicom_anonymizer.reports.models import FileRecord, ReportData
 
 
 class TestReportCommand:
@@ -70,9 +69,7 @@ class TestReportCommand:
     def test_report_invalid_json_path(self):
         """Report with nonexistent JSON shows error."""
         runner = CliRunner()
-        result = runner.invoke(
-            main, ["report", "--from-json", "/nonexistent/path.json"]
-        )
+        result = runner.invoke(main, ["report", "--from-json", "/nonexistent/path.json"])
 
         assert result.exit_code != 0
 

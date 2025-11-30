@@ -1,6 +1,6 @@
 # Configuration Guide
 
-Complete guide to configuring THAKAAMED DICOM Anonymizer presets.
+Complete guide to configuring DICOM Anonymizer presets.
 
 ## Overview
 
@@ -258,13 +258,13 @@ tag_rules:
 
 ```bash
 # Use custom preset file
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i /data/input \
     -o /data/output \
     -p ./hospital_research.yaml
 
 # Validate before use
-thakaamed-dicom validate --config ./hospital_research.yaml
+dicom-anonym validate --config ./hospital_research.yaml
 ```
 
 ## Best Practices
@@ -275,7 +275,7 @@ Use built-in presets as templates:
 
 ```bash
 # View a preset
-cat $(python -c "import thakaamed_dicom; print(thakaamed_dicom.__path__[0])")/presets/sfda_safe_harbor.yaml
+cat $(python -c "import dicom_anonymizer; print(dicom_anonymizer.__path__[0])")/presets/sfda_safe_harbor.yaml
 ```
 
 ### 2. Validate Before Production
@@ -283,7 +283,7 @@ cat $(python -c "import thakaamed_dicom; print(thakaamed_dicom.__path__[0])")/pr
 Always validate custom presets:
 
 ```bash
-thakaamed-dicom validate --config ./my_preset.yaml
+dicom-anonym validate --config ./my_preset.yaml
 ```
 
 ### 3. Test with Dry Run
@@ -291,7 +291,7 @@ thakaamed-dicom validate --config ./my_preset.yaml
 Preview changes before actual processing:
 
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./test_file.dcm \
     -o ./output \
     -p ./my_preset.yaml \

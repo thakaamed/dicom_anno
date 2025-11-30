@@ -4,7 +4,7 @@ from datetime import datetime
 
 import pytest
 
-from thakaamed_dicom.reports.models import FileRecord, ReportData
+from dicom_anonymizer.reports.models import FileRecord, ReportData
 
 
 @pytest.fixture

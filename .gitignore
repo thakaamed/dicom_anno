@@ -144,3 +144,10 @@ temp/
 offline_packages/
 *.tar.gz
 *.whl
+
+# =========================
+# Cursor and Claude
+# =========================
+.
+.cursor/
+.claude/

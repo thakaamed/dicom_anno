@@ -1,6 +1,6 @@
-# THAKAAMED DICOM Anonymizer Examples
+# DICOM Anonymizer Examples
 
-This directory contains example scripts and configurations for using THAKAAMED DICOM Anonymizer.
+This directory contains example scripts and configurations for using DICOM Anonymizer.
 
 ## Examples
 
@@ -41,10 +41,10 @@ Example custom preset configuration with detailed comments:
 
 ```bash
 # Validate the preset
-thakaamed-dicom validate --config ./custom_preset.yaml
+dicom-anonym validate --config ./custom_preset.yaml
 
 # Use the preset
-thakaamed-dicom anonymize -i ./input -o ./output -p ./custom_preset.yaml
+dicom-anonym anonymize -i ./input -o ./output -p ./custom_preset.yaml
 ```
 
 Demonstrates:
@@ -55,10 +55,10 @@ Demonstrates:
 
 ## Getting Started
 
-1. Install THAKAAMED DICOM Anonymizer:
+1. Install DICOM Anonymizer:
 
 ```bash
-pip install thakaamed-dicom
+pip install dicom-anonym
 ```
 
 2. Run an example:
@@ -79,8 +79,8 @@ python batch_processing.py /path/to/dicom/study /path/to/output
 Use these examples as templates for your own workflows:
 
 ```python
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
 
 # Your custom code here
 preset = load_preset("sfda_safe_harbor")

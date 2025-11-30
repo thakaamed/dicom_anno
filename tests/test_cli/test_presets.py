@@ -1,7 +1,6 @@
 """Tests for presets command."""
 
-
-from thakaamed_dicom.cli.main import main
+from dicom_anonymizer.cli.main import main
 
 
 class TestPresetsCommand:

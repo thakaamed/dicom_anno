@@ -2,8 +2,8 @@
 
 from pydicom import Dataset
 
-from thakaamed_dicom.config.models import ActionCode, TagRule
-from thakaamed_dicom.engine.actions import (
+from dicom_anonymizer.config.models import ActionCode, TagRule
+from dicom_anonymizer.engine.actions import (
     ActionFactory,
     CleanAction,
     DummyAction,
@@ -12,7 +12,7 @@ from thakaamed_dicom.engine.actions import (
     UIDReplaceAction,
     ZeroAction,
 )
-from thakaamed_dicom.engine.uid_mapper import UIDMapper
+from dicom_anonymizer.engine.uid_mapper import UIDMapper
 
 
 class TestDummyAction:

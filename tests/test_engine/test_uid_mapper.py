@@ -2,7 +2,7 @@
 
 from concurrent.futures import ThreadPoolExecutor
 
-from thakaamed_dicom.engine.uid_mapper import UIDMapper
+from dicom_anonymizer.engine.uid_mapper import UIDMapper
 
 
 class TestUIDMapper:
