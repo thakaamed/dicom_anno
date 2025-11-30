@@ -1,0 +1,146 @@
+# ============================================================================
+#  THAKAAMED DICOM Anonymizer - Git Ignore
+#  https://thakaamed.ai | contact@thakaamed.com
+# ============================================================================
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# =========================
+# Virtual Environments
+# =========================
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# =========================
+# IDE / Editors
+# =========================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# =========================
+# DICOM Files (Large Binary Files)
+# =========================
+# Ignore all DICOM files in any directory
+*.dcm
+*.dicom
+*.DCM
+*.DICOM
+
+# Ignore output directories (generated content)
+anonymized_output/
+branded_output/
+purple_output/
+full_rules_output/
+output/
+*/output/
+
+# Keep the dicom_files directory structure but ignore contents
+dicom_files/*
+!dicom_files/.gitkeep
+!dicom_files/README.md
+
+# =========================
+# Reports (Generated)
+# =========================
+# Ignore generated reports (users regenerate these)
+**/reports/*.pdf
+**/reports/*.json
+**/reports/*.csv
+
+# =========================
+# OS Generated Files
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Test / Coverage
+# =========================
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.hypothesis/
+coverage.xml
+*.cover
+
+# =========================
+# Build Artifacts
+# =========================
+*.manifest
+*.spec
+
+# =========================
+# Jupyter Notebooks
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Package Management
+# =========================
+# Keep uv.lock for reproducibility
+# Ignore pip wheel cache
+pip-wheel-metadata/
+
+# =========================
+# Temporary Files
+# =========================
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+
+# =========================
+# Offline Installation Packages
+# =========================
+offline_packages/
+*.tar.gz
+*.whl

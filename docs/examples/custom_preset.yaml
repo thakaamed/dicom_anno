@@ -1,0 +1,214 @@
+# Custom Preset Example
+#
+# This is an example custom preset configuration for THAKAAMED DICOM Anonymizer.
+# Copy and modify this file to create your own de-identification rules.
+#
+# Usage:
+#   thakaamed-dicom anonymize -i ./input -o ./output -p ./custom_preset.yaml
+#
+# Validate before use:
+#   thakaamed-dicom validate --config ./custom_preset.yaml
+
+# Preset metadata
+name: "Custom Research Preset"
+description: "Example custom preset for research studies with date shifting"
+version: "1.0.0"
+
+# Compliance standards this preset addresses
+compliance:
+  standards:
+    - "HIPAA Safe Harbor"
+    - "IRB Protocol Example"
+    - "Saudi PDPL"
+
+# Date handling configuration
+# Options: remove, shift, keep
+date_handling:
+  method: "shift"       # Shift dates to preserve intervals
+  shift_days: 365       # Shift by 1 year (positive = future, negative = past)
+
+# Private tag handling
+# Options: remove, keep
+private_tags:
+  action: "remove"      # Remove all private tags for safety
+
+# Tag-specific rules
+# Each rule specifies how to handle a specific DICOM tag
+#
+# Action types:
+#   remove  - Delete the tag entirely (DICOM Action Code: X)
+#   empty   - Set to empty/zero-length (DICOM Action Code: Z)
+#   replace - Replace with specified value (DICOM Action Code: D)
+#   hash    - Replace with deterministic hash (DICOM Action Code: U)
+#   keep    - Keep original value (DICOM Action Code: K)
+#   clean   - Clean identifying info from text (DICOM Action Code: C)
+#
+tag_rules:
+  # ===================
+  # Patient Information
+  # ===================
+
+  # Patient Name - Replace with generic identifier
+  - tag: "(0010,0010)"
+    action: "replace"
+    value: "RESEARCH_SUBJECT"
+
+  # Patient ID - Hash for consistent cross-reference
+  - tag: "(0010,0020)"
+    action: "hash"
+
+  # Patient Birth Date - Remove for maximum privacy
+  - tag: "(0010,0030)"
+    action: "remove"
+
+  # Patient Sex - Keep for research (adjust based on study needs)
+  - tag: "(0010,0040)"
+    action: "keep"
+
+  # Patient Age - Keep for research
+  - tag: "(0010,1010)"
+    action: "keep"
+
+  # Patient Weight - Keep for dose calculations
+  - tag: "(0010,1030)"
+    action: "keep"
+
+  # Other Patient IDs - Remove
+  - tag: "(0010,1000)"
+    action: "remove"
+
+  # Other Patient Names - Remove
+  - tag: "(0010,1001)"
+    action: "remove"
+
+  # Patient Address - Remove
+  - tag: "(0010,1040)"
+    action: "remove"
+
+  # Patient Telephone Numbers - Remove
+  - tag: "(0010,2154)"
+    action: "remove"
+
+  # Ethnic Group - Remove unless needed for study
+  - tag: "(0010,2160)"
+    action: "remove"
+
+  # Patient Comments - Clean identifying info
+  - tag: "(0010,4000)"
+    action: "clean"
+
+  # ===================
+  # Institution Information
+  # ===================
+
+  # Institution Name - Replace with generic
+  - tag: "(0008,0080)"
+    action: "replace"
+    value: "RESEARCH_INSTITUTION"
+
+  # Institution Address - Remove
+  - tag: "(0008,0081)"
+    action: "remove"
+
+  # Institutional Department Name - Keep for study tracking
+  - tag: "(0008,1040)"
+    action: "keep"
+
+  # Station Name - Hash (may be useful for QC)
+  - tag: "(0008,1010)"
+    action: "hash"
+
+  # ===================
+  # Physician Information
+  # ===================
+
+  # Referring Physician Name - Remove
+  - tag: "(0008,0090)"
+    action: "remove"
+
+  # Referring Physician Address - Remove
+  - tag: "(0008,0092)"
+    action: "remove"
+
+  # Referring Physician Phone - Remove
+  - tag: "(0008,0094)"
+    action: "remove"
+
+  # Performing Physician Name - Remove
+  - tag: "(0008,1050)"
+    action: "remove"
+
+  # Name of Physician Reading Study - Remove
+  - tag: "(0008,1060)"
+    action: "remove"
+
+  # Operators' Name - Remove
+  - tag: "(0008,1070)"
+    action: "remove"
+
+  # ===================
+  # Study/Series/Instance Identifiers
+  # ===================
+
+  # Accession Number - Hash for tracking
+  - tag: "(0008,0050)"
+    action: "hash"
+
+  # Study ID - Hash
+  - tag: "(0020,0010)"
+    action: "hash"
+
+  # Note: Study/Series/SOP Instance UIDs are automatically
+  # remapped using the UID mapper - no rule needed
+
+  # ===================
+  # Device Information
+  # ===================
+
+  # Device Serial Number - Remove or hash based on needs
+  - tag: "(0018,1000)"
+    action: "remove"
+
+  # Device UID - Remove
+  - tag: "(0018,1002)"
+    action: "remove"
+
+  # ===================
+  # Request Attributes
+  # ===================
+
+  # Requested Procedure ID - Hash
+  - tag: "(0040,1001)"
+    action: "hash"
+
+  # Scheduled Procedure Step ID - Hash
+  - tag: "(0040,0009)"
+    action: "hash"
+
+  # ===================
+  # Additional Safety Tags
+  # ===================
+
+  # Insurance Plan Identification - Remove
+  - tag: "(0010,1050)"
+    action: "remove"
+
+  # Responsible Person - Remove
+  - tag: "(0010,2297)"
+    action: "remove"
+
+  # Patient's Mother's Birth Name - Remove
+  - tag: "(0010,1060)"
+    action: "remove"
+
+  # Medical Record Locator - Remove
+  - tag: "(0010,1090)"
+    action: "remove"
+
+  # Branch of Service - Remove
+  - tag: "(0010,1081)"
+    action: "remove"
+
+  # Military Rank - Remove
+  - tag: "(0010,1080)"
+    action: "remove"

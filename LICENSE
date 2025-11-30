@@ -1,0 +1,214 @@
+================================================================================
+
+    ████████╗██╗  ██╗ █████╗ ██╗  ██╗ █████╗  █████╗ ███╗   ███╗███████╗██████╗
+    ╚══██╔══╝██║  ██║██╔══██╗██║ ██╔╝██╔══██╗██╔══██╗████╗ ████║██╔════╝██╔══██╗
+       ██║   ███████║███████║█████╔╝ ███████║███████║██╔████╔██║█████╗  ██║  ██║
+       ██║   ██╔══██║██╔══██║██╔═██╗ ██╔══██║██╔══██║██║╚██╔╝██║██╔══╝  ██║  ██║
+       ██║   ██║  ██║██║  ██║██║  ██╗██║  ██║██║  ██║██║ ╚═╝ ██║███████╗██████╔╝
+       ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝
+
+                      THAKAAMED AI - Enterprise Healthcare Solutions
+                         https://thakaamed.com | info@thakaamed.com
+
+================================================================================
+
+                    THAKAAMED DICOM ANONYMIZER - LICENSE AGREEMENT
+
+================================================================================
+
+Copyright (c) 2024 THAKAAMED AI. All rights reserved.
+
+--------------------------------------------------------------------------------
+                              LICENSE TYPE
+--------------------------------------------------------------------------------
+
+This software is licensed under the Creative Commons Attribution-NonCommercial-
+NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) with ADDITIONAL
+RESTRICTIONS for healthcare and commercial use.
+
+Full CC BY-NC-ND 4.0 license: https://creativecommons.org/licenses/by-nc-nd/4.0/
+
+--------------------------------------------------------------------------------
+                         RESEARCH & EDUCATIONAL USE
+--------------------------------------------------------------------------------
+
+This software is provided FREE OF CHARGE for:
+
+  * Academic and scientific research
+  * Educational purposes and learning
+  * Personal, non-commercial projects
+  * Evaluation and testing purposes
+  * Contributing to open-source healthcare initiatives
+
+--------------------------------------------------------------------------------
+                           PERMITTED ACTIVITIES
+--------------------------------------------------------------------------------
+
+Under this license, you MAY:
+
+  [✓] Use this software for academic research and publications
+  [✓] Use this software for educational purposes
+  [✓] Study, analyze, and learn from the source code
+  [✓] Use in non-commercial proof-of-concept projects
+  [✓] Share and cite this software in academic work (with attribution)
+  [✓] Fork and experiment with the code for personal learning
+
+--------------------------------------------------------------------------------
+                          PROHIBITED ACTIVITIES
+--------------------------------------------------------------------------------
+
+Under this license, you MAY NOT:
+
+  [✗] Use this software for any commercial purpose
+  [✗] Use this software in production healthcare environments
+  [✗] Sell, sublicense, lease, or rent this software
+  [✗] Offer this software as a service (SaaS, PaaS, etc.)
+  [✗] Integrate into commercial products or services
+  [✗] Create and distribute derivative works
+  [✗] Remove or alter copyright notices or license terms
+  [✗] Use for processing real patient data without a commercial license
+  [✗] Deploy in clinical, hospital, or medical facility settings
+
+--------------------------------------------------------------------------------
+                          COMMERCIAL LICENSING
+--------------------------------------------------------------------------------
+
+For any commercial use, including but not limited to:
+
+  * Production deployment in healthcare facilities
+  * Integration into commercial healthcare software
+  * Processing real patient data
+  * Hospital, clinic, or medical center deployments
+  * SaaS or cloud-based healthcare services
+  * Enterprise or organizational deployments
+  * Government healthcare projects
+
+Please contact THAKAAMED AI for a commercial license:
+
+  Email:   licensing@thakaamed.com
+  Web:     https://thakaamed.com/licensing
+  Phone:   Contact us via our website
+
+Commercial licenses include:
+
+  * Full production deployment rights
+  * Technical support and maintenance
+  * Custom feature development
+  * Compliance documentation and certification support
+  * Priority bug fixes and updates
+  * Indemnification and warranty options
+
+--------------------------------------------------------------------------------
+                              ATTRIBUTION
+--------------------------------------------------------------------------------
+
+When using this software for permitted purposes, you must:
+
+  1. Retain all copyright notices and license information
+  2. Provide attribution to "THAKAAMED AI" in any publications or outputs
+  3. Include a link to https://thakaamed.com when referencing this software
+  4. Not imply endorsement by THAKAAMED AI without written permission
+
+Suggested citation format:
+
+  THAKAAMED DICOM Anonymizer. (2024). THAKAAMED AI.
+  https://thakaamed.com
+
+--------------------------------------------------------------------------------
+                      HEALTHCARE DATA COMPLIANCE NOTICE
+--------------------------------------------------------------------------------
+
+IMPORTANT: This software is designed to assist with DICOM de-identification.
+However, compliance with healthcare data protection regulations (including but
+not limited to HIPAA, Saudi PDPL, GDPR, and local regulations) is the sole
+responsibility of the user.
+
+THAKAAMED AI does not guarantee regulatory compliance. Users must:
+
+  * Validate de-identification results for their specific use case
+  * Ensure compliance with applicable local and international regulations
+  * Obtain necessary ethical approvals for research involving patient data
+  * Implement appropriate security measures for data handling
+
+For production use with real patient data, a commercial license with compliance
+support is strongly recommended.
+
+--------------------------------------------------------------------------------
+                         DISCLAIMER OF WARRANTIES
+--------------------------------------------------------------------------------
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTY OF ANY
+KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+
+THAKAAMED AI DOES NOT WARRANT THAT:
+
+  * The software will meet your requirements
+  * The software will be uninterrupted, timely, secure, or error-free
+  * The results obtained from use of the software will be accurate or reliable
+  * Any errors in the software will be corrected
+
+--------------------------------------------------------------------------------
+                         LIMITATION OF LIABILITY
+--------------------------------------------------------------------------------
+
+IN NO EVENT SHALL THAKAAMED AI, ITS OFFICERS, DIRECTORS, EMPLOYEES, AGENTS,
+LICENSORS, OR SUPPLIERS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL,
+CONSEQUENTIAL, PUNITIVE, OR EXEMPLARY DAMAGES, INCLUDING BUT NOT LIMITED TO
+DAMAGES FOR LOSS OF PROFITS, GOODWILL, DATA, OR OTHER INTANGIBLE LOSSES,
+ARISING OUT OF OR IN CONNECTION WITH:
+
+  * Your use or inability to use the software
+  * Any unauthorized access to or alteration of your data
+  * Any third-party conduct or content
+  * Any other matter relating to the software
+
+This limitation applies regardless of the legal theory (contract, tort,
+negligence, strict liability, or otherwise) and even if THAKAAMED AI has been
+advised of the possibility of such damages.
+
+--------------------------------------------------------------------------------
+                            GOVERNING LAW
+--------------------------------------------------------------------------------
+
+This license shall be governed by and construed in accordance with the laws of
+the Kingdom of Saudi Arabia, without regard to its conflict of law provisions.
+Any disputes arising under this license shall be subject to the exclusive
+jurisdiction of the courts of Riyadh, Saudi Arabia.
+
+--------------------------------------------------------------------------------
+                             TERMINATION
+--------------------------------------------------------------------------------
+
+This license is effective until terminated. Your rights under this license will
+terminate automatically without notice if you fail to comply with any of its
+terms. Upon termination, you must:
+
+  * Cease all use of the software
+  * Destroy all copies in your possession or control
+  * Certify destruction upon request
+
+--------------------------------------------------------------------------------
+                              CONTACT
+--------------------------------------------------------------------------------
+
+THAKAAMED AI
+Enterprise Healthcare Solutions
+
+  General:     info@thakaamed.com
+  Licensing:   licensing@thakaamed.com
+  Development: dev@thakaamed.com
+  Support:     support@thakaamed.com
+
+  Website:     https://thakaamed.com
+  LinkedIn:    https://linkedin.com/company/thakaamed
+
+--------------------------------------------------------------------------------
+
+                    Supporting Saudi Vision 2030
+              Healthcare Transformation Through Innovation
+
+================================================================================
+          Thank you for respecting our work and licensing terms.
+                     Good vibes only. Happy coding! 1337
+================================================================================

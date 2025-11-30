@@ -1,0 +1,218 @@
+# SFDA Safe Harbor Preset
+# Most restrictive de-identification for HIPAA Safe Harbor compliance
+# Suitable for data export outside Saudi Arabia or public sharing
+
+name: "SFDA Safe Harbor"
+description: "Maximum privacy protection compliant with HIPAA Safe Harbor method. Removes all 18 HIPAA identifiers."
+version: "1.0.0"
+
+compliance:
+  - "DICOM PS3.15 Basic Profile"
+  - "HIPAA Safe Harbor Method"
+  - "Saudi PDPL"
+
+# Profile options - most restrictive
+clean_pixel_data: true
+clean_visual_features: true
+retain_longitudinal: false
+retain_patient_characteristics: false
+retain_device_identity: false
+retain_institution_identity: false
+retain_safe_private: false
+
+# Date handling - remove all dates for Safe Harbor
+date_handling: "remove"
+date_shift_base: null
+
+# Age handling - HIPAA requires ages >89 to become 90+
+age_threshold: 89
+
+# Remove all private tags
+remove_private_tags: true
+safe_private_tags: []
+
+# Tag-specific rules following DICOM PS3.15 Basic Profile
+tag_rules:
+  # ===========================================
+  # Patient Module - Primary Identifiers
+  # ===========================================
+  - tag: "(0010,0010)"
+    action: "Z"
+    replacement: "ANONYMIZED"
+    description: "Patient's Name"
+
+  - tag: "(0010,0020)"
+    action: "Z"
+    replacement: ""
+    description: "Patient ID"
+
+  - tag: "(0010,0030)"
+    action: "X"
+    description: "Patient's Birth Date"
+
+  - tag: "(0010,0032)"
+    action: "X"
+    description: "Patient's Birth Time"
+
+  - tag: "(0010,0040)"
+    action: "X"
+    description: "Patient's Sex"
+
+  - tag: "(0010,1000)"
+    action: "X"
+    description: "Other Patient IDs"
+
+  - tag: "(0010,1001)"
+    action: "X"
+    description: "Other Patient Names"
+
+  - tag: "(0010,1010)"
+    action: "X"
+    description: "Patient's Age"
+
+  - tag: "(0010,1040)"
+    action: "X"
+    description: "Patient's Address"
+
+  - tag: "(0010,2154)"
+    action: "X"
+    description: "Patient's Telephone Numbers"
+
+  # ===========================================
+  # Study/Series Identifiers
+  # ===========================================
+  - tag: "(0008,0020)"
+    action: "Z"
+    description: "Study Date"
+
+  - tag: "(0008,0021)"
+    action: "Z"
+    description: "Series Date"
+
+  - tag: "(0008,0022)"
+    action: "Z"
+    description: "Acquisition Date"
+
+  - tag: "(0008,0023)"
+    action: "Z"
+    description: "Content Date"
+
+  - tag: "(0008,0030)"
+    action: "Z"
+    description: "Study Time"
+
+  - tag: "(0008,0031)"
+    action: "Z"
+    description: "Series Time"
+
+  - tag: "(0008,0032)"
+    action: "Z"
+    description: "Acquisition Time"
+
+  - tag: "(0008,0033)"
+    action: "Z"
+    description: "Content Time"
+
+  - tag: "(0008,0050)"
+    action: "Z"
+    description: "Accession Number"
+
+  # ===========================================
+  # UIDs - Replace with new consistent UIDs
+  # ===========================================
+  - tag: "(0020,000D)"
+    action: "U"
+    description: "Study Instance UID"
+
+  - tag: "(0020,000E)"
+    action: "U"
+    description: "Series Instance UID"
+
+  - tag: "(0008,0018)"
+    action: "U"
+    description: "SOP Instance UID"
+
+  - tag: "(0008,0016)"
+    action: "K"
+    description: "SOP Class UID - Keep unchanged"
+
+  - tag: "(0020,0052)"
+    action: "U"
+    description: "Frame of Reference UID"
+
+  # ===========================================
+  # Institution/Provider Information
+  # ===========================================
+  - tag: "(0008,0080)"
+    action: "X"
+    description: "Institution Name"
+
+  - tag: "(0008,0081)"
+    action: "X"
+    description: "Institution Address"
+
+  - tag: "(0008,0082)"
+    action: "X"
+    description: "Institution Code Sequence"
+
+  - tag: "(0008,0090)"
+    action: "Z"
+    description: "Referring Physician's Name"
+
+  - tag: "(0008,0092)"
+    action: "X"
+    description: "Referring Physician's Address"
+
+  - tag: "(0008,0094)"
+    action: "X"
+    description: "Referring Physician's Telephone Numbers"
+
+  - tag: "(0008,1048)"
+    action: "X"
+    description: "Physician(s) of Record"
+
+  - tag: "(0008,1050)"
+    action: "X"
+    description: "Performing Physician's Name"
+
+  - tag: "(0008,1070)"
+    action: "X"
+    description: "Operators' Name"
+
+  # ===========================================
+  # Descriptive Fields
+  # ===========================================
+  - tag: "(0008,103E)"
+    action: "X"
+    description: "Series Description"
+
+  - tag: "(0008,1030)"
+    action: "X"
+    description: "Study Description"
+
+  - tag: "(0010,4000)"
+    action: "X"
+    description: "Patient Comments"
+
+  - tag: "(0020,4000)"
+    action: "X"
+    description: "Image Comments"
+
+  - tag: "(0032,4000)"
+    action: "X"
+    description: "Study Comments"
+
+  # ===========================================
+  # Equipment Information
+  # ===========================================
+  - tag: "(0008,1010)"
+    action: "X"
+    description: "Station Name"
+
+  - tag: "(0018,1000)"
+    action: "X"
+    description: "Device Serial Number"
+
+  - tag: "(0018,1002)"
+    action: "U"
+    description: "Device UID"
