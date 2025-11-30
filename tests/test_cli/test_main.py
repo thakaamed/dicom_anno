@@ -1,7 +1,6 @@
 """Tests for main CLI group."""
 
-
-from thakaamed_dicom.cli.main import main
+from dicom_anonymizer.cli.main import main
 
 
 class TestMainCLI:
@@ -11,7 +10,7 @@ class TestMainCLI:
         """--help shows available commands."""
         result = cli_runner.invoke(main, ["--help"])
         assert result.exit_code == 0
-        assert "THAKAAMED DICOM Anonymizer" in result.output
+        assert "DICOM Anonymizer" in result.output
         assert "anonymize" in result.output
         assert "validate" in result.output
         assert "presets" in result.output

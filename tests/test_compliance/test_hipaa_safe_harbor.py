@@ -3,9 +3,9 @@
 import pytest
 from pydicom import dcmread
 
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
 from tests.fixtures.dicom_factory import DicomFactory
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
 
 
 class TestHIPAASafeHarbor:
@@ -59,9 +59,7 @@ class TestHIPAASafeHarbor:
 
         assert not hasattr(ds, "PatientTelephoneNumbers") or ds.PatientTelephoneNumbers == ""
 
-    def test_medical_record_numbers_replaced(
-        self, safe_harbor_processor, full_phi_file, tmp_path
-    ):
+    def test_medical_record_numbers_replaced(self, safe_harbor_processor, full_phi_file, tmp_path):
         """Medical record numbers are replaced (Identifier #6)."""
         output = tmp_path / "output.dcm"
         original = dcmread(str(full_phi_file), force=True)
@@ -97,9 +95,7 @@ class TestHIPAASafeHarbor:
         # Just ensure processing completes without error
         assert result is not None
 
-    def test_private_tags_removed_safe_harbor(
-        self, safe_harbor_processor, tmp_path
-    ):
+    def test_private_tags_removed_safe_harbor(self, safe_harbor_processor, tmp_path):
         """Private tags are removed for Safe Harbor compliance."""
         ds = DicomFactory.create_with_private_tags(num_private=5)
         input_file = tmp_path / "private.dcm"

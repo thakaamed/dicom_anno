@@ -3,7 +3,7 @@
 Basic DICOM Anonymization Example
 
 This script demonstrates the simplest way to anonymize DICOM files
-using THAKAAMED DICOM Anonymizer.
+using DICOM Anonymizer.
 
 Usage:
     python basic_anonymization.py
@@ -11,8 +11,8 @@ Usage:
 
 from pathlib import Path
 
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
 
 
 def main():

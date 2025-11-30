@@ -1,8 +1,7 @@
 """Tests for version command."""
 
-
-from thakaamed_dicom import __version__
-from thakaamed_dicom.cli.main import main
+from dicom_anonymizer import __version__
+from dicom_anonymizer.cli.main import main
 
 
 class TestVersionCommand:

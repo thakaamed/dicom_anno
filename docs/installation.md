@@ -1,6 +1,6 @@
 # Installation Guide
 
-Complete installation instructions for THAKAAMED DICOM Anonymizer.
+Complete installation instructions for DICOM Anonymizer.
 
 ## Requirements
 
@@ -50,10 +50,10 @@ uv pip install -e ".[dev]"
 Once the package is published to PyPI:
 
 ```bash
-pip install thakaamed-dicom
+pip install dicom-anonym
 
 # Or with uv
-uv pip install thakaamed-dicom
+uv pip install dicom-anonym
 ```
 
 ## Verifying Installation
@@ -62,19 +62,19 @@ After installation, verify everything works:
 
 ```bash
 # Check version
-thakaamed-dicom version
+dicom-anonym version
 
 # List available presets
-thakaamed-dicom presets
+dicom-anonym presets
 
 # Get help
-thakaamed-dicom --help
+dicom-anonym --help
 ```
 
 Expected output:
 
 ```
-THAKAAMED DICOM Anonymizer v1.0.0
+DICOM Anonymizer v1.0.1
 ```
 
 ## Dependencies
@@ -181,15 +181,15 @@ COPY . /app
 
 RUN pip install -e .
 
-ENTRYPOINT ["thakaamed-dicom"]
+ENTRYPOINT ["dicom-anonym"]
 ```
 
 Build and run:
 
 ```bash
 # From the DICOM-ANNO directory
-docker build -t thakaamed-dicom .
-docker run -v /path/to/dicom:/data thakaamed-dicom anonymize \
+docker build -t dicom-anonym .
+docker run -v /path/to/dicom:/data dicom-anonym anonymize \
     -i /data/input -o /data/output -p sfda_safe_harbor
 ```
 
@@ -213,10 +213,10 @@ pip install -e ".[dev]"
 source .venv/bin/activate
 
 # Check installation
-pip show thakaamed-dicom
+pip show dicom-anonym
 
 # Verify CLI is available
-which thakaamed-dicom
+which dicom-anonym
 ```
 
 **Import errors with pydicom**
@@ -252,7 +252,7 @@ pip install -e ".[dev]"
 To remove the package:
 
 ```bash
-pip uninstall thakaamed-dicom
+pip uninstall dicom-anonym
 
 # Or simply deactivate and remove the virtual environment
 deactivate

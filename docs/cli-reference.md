@@ -1,13 +1,13 @@
 # CLI Reference
 
-Complete command-line interface documentation for THAKAAMED DICOM Anonymizer.
+Complete command-line interface documentation for DICOM Anonymizer.
 
 ## Global Options
 
 All commands support these global options:
 
 ```bash
-thakaamed-dicom [OPTIONS] COMMAND [ARGS]
+dicom-anonym [OPTIONS] COMMAND [ARGS]
 ```
 
 | Option | Description |
@@ -22,7 +22,7 @@ thakaamed-dicom [OPTIONS] COMMAND [ARGS]
 De-identify DICOM files using a specified preset.
 
 ```bash
-thakaamed-dicom anonymize [OPTIONS]
+dicom-anonym anonymize [OPTIONS]
 ```
 
 #### Required Options
@@ -50,7 +50,7 @@ thakaamed-dicom anonymize [OPTIONS]
 **Basic anonymization:**
 
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     --input /path/to/dicom/study \
     --output /path/to/anonymized \
     --preset sfda_safe_harbor
@@ -59,7 +59,7 @@ thakaamed-dicom anonymize \
 **Single file:**
 
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i ./scan.dcm \
     -o ./anonymized_scan.dcm \
     -p sfda_safe_harbor
@@ -68,7 +68,7 @@ thakaamed-dicom anonymize \
 **With date shifting:**
 
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i /data/study \
     -o /data/output \
     -p research \
@@ -78,7 +78,7 @@ thakaamed-dicom anonymize \
 **Dry run (preview):**
 
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i /data/study \
     -o /data/output \
     -p sfda_safe_harbor \
@@ -88,7 +88,7 @@ thakaamed-dicom anonymize \
 **Custom worker count:**
 
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i /data/large_study \
     -o /data/output \
     -p sfda_safe_harbor \
@@ -98,7 +98,7 @@ thakaamed-dicom anonymize \
 **JSON reports only:**
 
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i /data/study \
     -o /data/output \
     -p sfda_safe_harbor \
@@ -108,7 +108,7 @@ thakaamed-dicom anonymize \
 **No reports:**
 
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i /data/study \
     -o /data/output \
     -p sfda_safe_harbor \
@@ -118,7 +118,7 @@ thakaamed-dicom anonymize \
 **Custom preset file:**
 
 ```bash
-thakaamed-dicom anonymize \
+dicom-anonym anonymize \
     -i /data/study \
     -o /data/output \
     -p ./my_custom_preset.yaml
@@ -131,7 +131,7 @@ thakaamed-dicom anonymize \
 List all available built-in presets.
 
 ```bash
-thakaamed-dicom presets
+dicom-anonym presets
 ```
 
 #### Output
@@ -154,7 +154,7 @@ Available Presets
 Validate a preset configuration file.
 
 ```bash
-thakaamed-dicom validate [OPTIONS]
+dicom-anonym validate [OPTIONS]
 ```
 
 #### Options
@@ -169,13 +169,13 @@ thakaamed-dicom validate [OPTIONS]
 **Validate built-in preset:**
 
 ```bash
-thakaamed-dicom validate --preset sfda_safe_harbor
+dicom-anonym validate --preset sfda_safe_harbor
 ```
 
 **Validate custom config:**
 
 ```bash
-thakaamed-dicom validate --config ./custom_preset.yaml
+dicom-anonym validate --config ./custom_preset.yaml
 ```
 
 #### Output
@@ -201,7 +201,7 @@ Configuration is valid!
 Generate reports from existing JSON audit data.
 
 ```bash
-thakaamed-dicom report [OPTIONS]
+dicom-anonym report [OPTIONS]
 ```
 
 #### Required Options
@@ -222,7 +222,7 @@ thakaamed-dicom report [OPTIONS]
 **Generate PDF from JSON audit:**
 
 ```bash
-thakaamed-dicom report \
+dicom-anonym report \
     --from-json ./reports/audit_20240115.json \
     --format pdf
 ```
@@ -230,7 +230,7 @@ thakaamed-dicom report \
 **Generate all formats:**
 
 ```bash
-thakaamed-dicom report \
+dicom-anonym report \
     --from-json ./reports/audit_20240115.json \
     --format all \
     -o ./new_reports
@@ -243,13 +243,13 @@ thakaamed-dicom report \
 Display version information.
 
 ```bash
-thakaamed-dicom version
+dicom-anonym version
 ```
 
 #### Output
 
 ```
-THAKAAMED DICOM Anonymizer v1.0.0
+DICOM Anonymizer v1.0.1
 ```
 
 ---
@@ -316,7 +316,7 @@ Spreadsheet-compatible format for data analysis.
 Add to `~/.bashrc`:
 
 ```bash
-eval "$(_THAKAAMED_DICOM_COMPLETE=bash_source thakaamed-dicom)"
+eval "$(_DICOM_ANONYM_COMPLETE=bash_source dicom-anonym)"
 ```
 
 ### Zsh
@@ -324,15 +324,15 @@ eval "$(_THAKAAMED_DICOM_COMPLETE=bash_source thakaamed-dicom)"
 Add to `~/.zshrc`:
 
 ```bash
-eval "$(_THAKAAMED_DICOM_COMPLETE=zsh_source thakaamed-dicom)"
+eval "$(_DICOM_ANONYM_COMPLETE=zsh_source dicom-anonym)"
 ```
 
 ### Fish
 
-Add to `~/.config/fish/completions/thakaamed-dicom.fish`:
+Add to `~/.config/fish/completions/dicom-anonym.fish`:
 
 ```fish
-eval (env _THAKAAMED_DICOM_COMPLETE=fish_source thakaamed-dicom)
+eval (env _DICOM_ANONYM_COMPLETE=fish_source dicom-anonym)
 ```
 
 ---

@@ -1,6 +1,6 @@
 """Tests for PDF report builder."""
 
-from thakaamed_dicom.reports.pdf_report import PDFReportBuilder
+from dicom_anonymizer.reports.pdf_report import PDFReportBuilder
 
 
 class TestPDFReportBuilder:
@@ -64,7 +64,7 @@ class TestPDFReportBuilder:
 
     def test_build_handles_many_file_records(self, sample_report_data, tmp_report_dir):
         """PDF generation handles many file records."""
-        from thakaamed_dicom.reports.models import FileRecord
+        from dicom_anonymizer.reports.models import FileRecord
 
         # Add 100 file records
         for i in range(100):

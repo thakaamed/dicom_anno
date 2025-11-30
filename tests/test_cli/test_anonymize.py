@@ -2,8 +2,8 @@
 
 from click.testing import CliRunner
 
+from dicom_anonymizer.cli.main import main
 from tests.fixtures.dicom_factory import DicomFactory
-from thakaamed_dicom.cli.main import main
 
 
 class TestAnonymizeCommand:
@@ -12,9 +12,7 @@ class TestAnonymizeCommand:
     def test_anonymize_requires_input(self):
         """Anonymize requires --input option."""
         runner = CliRunner()
-        result = runner.invoke(
-            main, ["anonymize", "-o", "/tmp/output", "-p", "sfda_safe_harbor"]
-        )
+        result = runner.invoke(main, ["anonymize", "-o", "/tmp/output", "-p", "sfda_safe_harbor"])
 
         assert result.exit_code != 0
         assert "Missing option" in result.output or "required" in result.output.lower()

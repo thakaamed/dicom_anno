@@ -2,10 +2,10 @@
 
 import json
 
-from thakaamed_dicom.config.models import ActionCode, DateHandling, PresetConfig, TagRule
-from thakaamed_dicom.engine.statistics import FileStatistics, ProcessingStatistics
-from thakaamed_dicom.reports.generator import ReportGenerator
-from thakaamed_dicom.reports.models import ReportFormat
+from dicom_anonymizer.config.models import ActionCode, DateHandling, PresetConfig, TagRule
+from dicom_anonymizer.engine.statistics import FileStatistics, ProcessingStatistics
+from dicom_anonymizer.reports.generator import ReportGenerator
+from dicom_anonymizer.reports.models import ReportFormat
 
 
 class TestReportGenerator:
@@ -228,7 +228,7 @@ class TestReportGenerator:
     def test_from_json_loads_data(self, sample_report_data, tmp_report_dir):
         """from_json correctly loads report data."""
         # First, generate a JSON report
-        from thakaamed_dicom.reports.json_report import JSONReportBuilder
+        from dicom_anonymizer.reports.json_report import JSONReportBuilder
 
         builder = JSONReportBuilder()
         json_path = tmp_report_dir / "test.json"

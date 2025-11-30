@@ -13,10 +13,10 @@ import argparse
 import sys
 from pathlib import Path
 
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
-from thakaamed_dicom.reports.generator import ReportGenerator
-from thakaamed_dicom.reports.models import ReportFormat
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
+from dicom_anonymizer.reports.generator import ReportGenerator
+from dicom_anonymizer.reports.models import ReportFormat
 
 
 def progress_callback(current: int, total: int) -> None:
@@ -74,7 +74,7 @@ def main():
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     print("=" * 50)
-    print("  THAKAAMED DICOM Batch Anonymization")
+    print("  DICOM Batch Anonymization")
     print("=" * 50)
     print(f"\nInput:   {args.input_dir}")
     print(f"Output:  {args.output_dir}")

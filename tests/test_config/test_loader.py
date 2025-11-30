@@ -1,16 +1,15 @@
 """Tests for configuration loader."""
 
-
 import pytest
 
-from thakaamed_dicom.config.loader import (
+from dicom_anonymizer.config.loader import (
     get_bundled_presets_path,
     get_user_presets_path,
     list_available_presets,
     list_preset_names,
     load_preset,
 )
-from thakaamed_dicom.config.models import PresetConfig
+from dicom_anonymizer.config.models import PresetConfig
 
 
 class TestLoadPreset:
@@ -114,5 +113,5 @@ class TestPresetPaths:
     def test_user_presets_path(self):
         """User presets path is in home directory."""
         path = get_user_presets_path()
-        assert ".thakaamed" in str(path)
+        assert ".dicom_anonymizer" in str(path)
         assert "presets" in str(path)

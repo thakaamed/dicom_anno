@@ -1,6 +1,6 @@
 # API Reference
 
-Python API documentation for THAKAAMED DICOM Anonymizer.
+Python API documentation for DICOM Anonymizer.
 
 ## Overview
 
@@ -9,8 +9,8 @@ THAKAAMED provides a Python API for programmatic DICOM de-identification. This e
 ## Quick Start
 
 ```python
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
 
 # Load preset
 preset = load_preset("sfda_safe_harbor")
@@ -25,14 +25,14 @@ print(f"Success: {stats.success}")
 
 ## Module Reference
 
-### thakaamed_dicom.config
+### dicom_anonymizer.config
 
 Configuration loading and validation.
 
 #### load_preset
 
 ```python
-from thakaamed_dicom.config.loader import load_preset
+from dicom_anonymizer.config.loader import load_preset
 
 def load_preset(name_or_path: str) -> AnonymizationPreset:
     """
@@ -57,7 +57,7 @@ def load_preset(name_or_path: str) -> AnonymizationPreset:
 #### list_presets
 
 ```python
-from thakaamed_dicom.config.loader import list_presets
+from dicom_anonymizer.config.loader import list_presets
 
 def list_presets() -> list[PresetInfo]:
     """
@@ -75,7 +75,7 @@ def list_presets() -> list[PresetInfo]:
 #### AnonymizationPreset
 
 ```python
-from thakaamed_dicom.config.models import AnonymizationPreset
+from dicom_anonymizer.config.models import AnonymizationPreset
 
 class AnonymizationPreset(BaseModel):
     """
@@ -103,7 +103,7 @@ class AnonymizationPreset(BaseModel):
 #### TagRule
 
 ```python
-from thakaamed_dicom.config.models import TagRule, ActionType
+from dicom_anonymizer.config.models import TagRule, ActionType
 
 class TagRule(BaseModel):
     """
@@ -131,14 +131,14 @@ class ActionType(str, Enum):
 
 ---
 
-### thakaamed_dicom.engine
+### dicom_anonymizer.engine
 
 Core processing engine.
 
 #### DicomProcessor
 
 ```python
-from thakaamed_dicom.engine.processor import DicomProcessor
+from dicom_anonymizer.engine.processor import DicomProcessor
 
 class DicomProcessor:
     """
@@ -209,7 +209,7 @@ class DicomProcessor:
 #### FileStatistics
 
 ```python
-from thakaamed_dicom.engine.processor import FileStatistics
+from dicom_anonymizer.engine.processor import FileStatistics
 
 @dataclass
 class FileStatistics:
@@ -233,7 +233,7 @@ class FileStatistics:
 #### ProcessingStatistics
 
 ```python
-from thakaamed_dicom.engine.processor import ProcessingStatistics
+from dicom_anonymizer.engine.processor import ProcessingStatistics
 
 @dataclass
 class ProcessingStatistics:
@@ -255,14 +255,14 @@ class ProcessingStatistics:
 
 ---
 
-### thakaamed_dicom.engine.uid_mapper
+### dicom_anonymizer.engine.uid_mapper
 
 UID remapping utilities.
 
 #### UIDMapper
 
 ```python
-from thakaamed_dicom.engine.uid_mapper import UIDMapper
+from dicom_anonymizer.engine.uid_mapper import UIDMapper
 
 class UIDMapper:
     """
@@ -311,14 +311,14 @@ class UIDMapper:
 
 ---
 
-### thakaamed_dicom.engine.actions
+### dicom_anonymizer.engine.actions
 
 Tag action implementations.
 
 #### ActionExecutor
 
 ```python
-from thakaamed_dicom.engine.actions import ActionExecutor
+from dicom_anonymizer.engine.actions import ActionExecutor
 
 class ActionExecutor:
     """
@@ -353,14 +353,14 @@ class ActionExecutor:
 
 ---
 
-### thakaamed_dicom.reports
+### dicom_anonymizer.reports
 
 Report generation.
 
 #### ReportGenerator
 
 ```python
-from thakaamed_dicom.reports.generator import ReportGenerator
+from dicom_anonymizer.reports.generator import ReportGenerator
 
 class ReportGenerator:
     """
@@ -413,7 +413,7 @@ class ReportGenerator:
 #### ReportFormat
 
 ```python
-from thakaamed_dicom.reports.models import ReportFormat
+from dicom_anonymizer.reports.models import ReportFormat
 
 class ReportFormat(str, Enum):
     """Available report formats."""
@@ -430,8 +430,8 @@ class ReportFormat(str, Enum):
 ### Basic File Processing
 
 ```python
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
 
 # Load preset
 preset = load_preset("sfda_safe_harbor")
@@ -453,8 +453,8 @@ print(f"New Study UID: {stats.study_uid_new}")
 ### Batch Processing with Progress
 
 ```python
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
 
 def progress_callback(current: int, total: int):
     print(f"Processing: {current}/{total}")
@@ -478,7 +478,7 @@ print(f"Failed: {stats.files_failed}")
 ### Custom Preset Configuration
 
 ```python
-from thakaamed_dicom.config.models import (
+from dicom_anonymizer.config.models import (
     AnonymizationPreset,
     ComplianceConfig,
     DateHandlingConfig,
@@ -487,7 +487,7 @@ from thakaamed_dicom.config.models import (
     TagRule,
     ActionType
 )
-from thakaamed_dicom.engine.processor import DicomProcessor
+from dicom_anonymizer.engine.processor import DicomProcessor
 
 # Create preset programmatically
 preset = AnonymizationPreset(
@@ -513,10 +513,10 @@ stats = processor.process_file("input.dcm", "output.dcm")
 ### Report Generation
 
 ```python
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
-from thakaamed_dicom.reports.generator import ReportGenerator
-from thakaamed_dicom.reports.models import ReportFormat
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
+from dicom_anonymizer.reports.generator import ReportGenerator
+from dicom_anonymizer.reports.models import ReportFormat
 
 # Process files
 preset = load_preset("sfda_safe_harbor")
@@ -540,8 +540,8 @@ for path in report_paths:
 ### Regenerate Reports from JSON
 
 ```python
-from thakaamed_dicom.reports.generator import ReportGenerator
-from thakaamed_dicom.reports.pdf_report import PDFReportBuilder
+from dicom_anonymizer.reports.generator import ReportGenerator
+from dicom_anonymizer.reports.pdf_report import PDFReportBuilder
 
 # Load existing audit data
 report_data = ReportGenerator.from_json("./audit_20240115.json")
@@ -554,9 +554,9 @@ pdf_builder.build(report_data, "./new_report.pdf")
 ### Custom UID Mapper
 
 ```python
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
-from thakaamed_dicom.engine.uid_mapper import UIDMapper
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
+from dicom_anonymizer.engine.uid_mapper import UIDMapper
 
 # Create custom mapper with specific prefix
 mapper = UIDMapper(prefix="1.2.826.0.1.3680043.8.498")
@@ -578,8 +578,8 @@ for original, remapped in uid_mapping.items():
 
 ```python
 from datetime import date
-from thakaamed_dicom.config.loader import load_preset
-from thakaamed_dicom.engine.processor import DicomProcessor
+from dicom_anonymizer.config.loader import load_preset
+from dicom_anonymizer.engine.processor import DicomProcessor
 
 # Use anchor date for consistent shifting
 preset = load_preset("research")
@@ -597,7 +597,7 @@ stats = processor.process_directory("./study", "./anonymized")
 ## Exceptions
 
 ```python
-from thakaamed_dicom.exceptions import (
+from dicom_anonymizer.exceptions import (
     ThakaamedError,          # Base exception
     PresetNotFoundError,     # Preset name not found
     PresetValidationError,   # Invalid preset configuration
@@ -613,13 +613,13 @@ from thakaamed_dicom.exceptions import (
 Full type hints are provided for IDE support:
 
 ```python
-from thakaamed_dicom.config.models import AnonymizationPreset
-from thakaamed_dicom.engine.processor import (
+from dicom_anonymizer.config.models import AnonymizationPreset
+from dicom_anonymizer.engine.processor import (
     DicomProcessor,
     FileStatistics,
     ProcessingStatistics
 )
-from thakaamed_dicom.reports.models import ReportData, ReportFormat
+from dicom_anonymizer.reports.models import ReportData, ReportFormat
 ```
 
 ---

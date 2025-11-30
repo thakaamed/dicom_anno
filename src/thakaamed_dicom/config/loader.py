@@ -12,21 +12,22 @@
 # ============================================================================
 """YAML configuration loader with validation."""
 
+from importlib.resources import files
 from pathlib import Path
 
 import yaml
 
-from thakaamed_dicom.config.models import AppConfig, PresetConfig
+from dicom_anonymizer.config.models import AppConfig, PresetConfig
 
 
 def get_bundled_presets_path() -> Path:
     """Get path to bundled preset files."""
-    return Path(__file__).parent.parent / "presets"
+    return Path(str(files("dicom_anonymizer.presets")))
 
 
 def get_user_presets_path() -> Path:
     """Get path to user preset files (in home directory)."""
-    return Path.home() / ".thakaamed" / "presets"
+    return Path.home() / ".dicom_anonymizer" / "presets"
 
 
 def load_preset(name_or_path: str | Path) -> PresetConfig:

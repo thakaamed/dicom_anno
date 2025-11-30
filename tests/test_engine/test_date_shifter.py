@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from thakaamed_dicom.engine.date_shifter import DateShifter
+from dicom_anonymizer.engine.date_shifter import DateShifter
 
 
 class TestDateShifter:

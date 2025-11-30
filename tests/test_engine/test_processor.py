@@ -2,7 +2,7 @@
 
 from pydicom import dcmread
 
-from thakaamed_dicom.engine.processor import DicomProcessor
+from dicom_anonymizer.engine.processor import DicomProcessor
 
 
 class TestDicomProcessorFile:
@@ -109,24 +109,18 @@ class TestDicomProcessorFile:
 class TestDicomProcessorDirectory:
     """Tests for directory processing."""
 
-    def test_process_directory(
-        self, sample_dicom_directory, sample_preset, tmp_path
-    ):
+    def test_process_directory(self, sample_dicom_directory, sample_preset, tmp_path):
         """Processes all DICOM files in directory."""
         output_dir = tmp_path / "output"
 
         processor = DicomProcessor(preset=sample_preset)
-        stats = processor.process_directory(
-            sample_dicom_directory, output_dir, parallel=False
-        )
+        stats = processor.process_directory(sample_dicom_directory, output_dir, parallel=False)
 
         assert stats.files_processed > 0
         assert stats.files_successful == stats.files_processed
         assert stats.files_failed == 0
 
-    def test_parallel_processing(
-        self, sample_dicom_directory, sample_preset, tmp_path
-    ):
+    def test_parallel_processing(self, sample_dicom_directory, sample_preset, tmp_path):
         """Parallel processing works correctly."""
         output_dir = tmp_path / "output"
 
@@ -138,9 +132,7 @@ class TestDicomProcessorDirectory:
         assert stats.files_successful > 0
         assert stats.files_failed == 0
 
-    def test_uid_consistency_across_files(
-        self, sample_dicom_directory, sample_preset, tmp_path
-    ):
+    def test_uid_consistency_across_files(self, sample_dicom_directory, sample_preset, tmp_path):
         """UIDs are consistent across files in same study."""
         output_dir = tmp_path / "output"
 
@@ -157,9 +149,7 @@ class TestDicomProcessorDirectory:
         assert len(study_uids) == 1
         assert list(study_uids)[0].startswith("2.25.")
 
-    def test_progress_callback(
-        self, sample_dicom_directory, sample_preset, tmp_path
-    ):
+    def test_progress_callback(self, sample_dicom_directory, sample_preset, tmp_path):
         """Progress callback is called correctly."""
         output_dir = tmp_path / "output"
         progress_calls = []
@@ -195,9 +185,7 @@ class TestDicomProcessorDirectory:
 class TestDateShifting:
     """Tests for date shifting functionality."""
 
-    def test_date_shifting_applied(
-        self, sample_dicom_file, research_preset, tmp_path
-    ):
+    def test_date_shifting_applied(self, sample_dicom_file, research_preset, tmp_path):
         """Date shifting is applied when configured."""
         output_file = tmp_path / "output.dcm"
 
