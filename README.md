@@ -601,9 +601,9 @@ See [LICENSE](LICENSE) for full terms.
 
 <div align="center">
 
-## 🇸🇦 صُنع في المملكة العربية السعودية
+## 🇸🇦 Saudi Made - صُنع في السعودية
 
-### Made with ♥ in Riyadh, Kingdom of Saudi Arabia
+### Made with ♥ in Riyadh
 
 ---
 
