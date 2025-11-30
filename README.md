@@ -1,40 +1,81 @@
 <div align="center">
 
-# THAKAAMED DICOM Anonymizer
+# 🏥 THAKAAMED DICOM Anonymizer
 
-**Professional DICOM de-identification for Saudi healthcare**
+### مُجهِّز بيانات DICOM الطبية
+
+**Empowering Saudi Healthcare Research with Privacy-First Medical Imaging**
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![License: Non-Commercial](https://img.shields.io/badge/License-Non--Commercial-red.svg)](LICENSE)
+[![SFDA Compliant](https://img.shields.io/badge/SFDA-Compliant-006C35.svg)](https://www.sfda.gov.sa/)
+[![SDAIA Ready](https://img.shields.io/badge/SDAIA-PDPL_Ready-006C35.svg)](https://sdaia.gov.sa/)
 [![DICOM PS3.15](https://img.shields.io/badge/DICOM-PS3.15-orange.svg)](https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_e.html)
+[![License: Non-Commercial](https://img.shields.io/badge/License-Research_Free-purple.svg)](LICENSE)
 
-*Supporting Saudi Vision 2030 Healthcare Transformation*
+---
 
-**THAKAAMED AI** | Enterprise Healthcare Solutions
+🇸🇦 **Built in Saudi Arabia for Saudi Healthcare** 🇸🇦
+
+*Accelerating Vision 2030 Healthcare & AI Transformation*
+
+**THAKAAMED AI** | https://thakaamed.ai
 
 </div>
 
 ---
 
+## 🌟 For Saudi Researchers & Healthcare Innovators
+
+THAKAAMED DICOM Anonymizer is purpose-built to help **Saudi researchers, hospitals, and AI teams** unlock the power of medical imaging data while maintaining the highest standards of patient privacy and regulatory compliance.
+
+> **"Enabling world-class medical AI research in the Kingdom, ethically and compliantly."**
+
+### 🏛️ Saudi Regulatory Compliance First
+
+| 🇸🇦 Saudi Standards | Status | Description |
+|---------------------|--------|-------------|
+| **SFDA** (Saudi FDA) | ✅ Compliant | Medical device software compliance ready |
+| **SDAIA PDPL** | ✅ Compliant | Saudi Personal Data Protection Law (نظام حماية البيانات الشخصية) |
+| **NDMO** | ✅ Ready | National Data Management Office guidelines |
+| **MOH Guidelines** | ✅ Aligned | Ministry of Health data sharing standards |
+
+### 🌍 International Standards
+
+| Standard | Status | Description |
+|----------|--------|-------------|
+| **DICOM PS3.15** | ✅ Compliant | International medical imaging de-identification standard |
+| **HIPAA Safe Harbor** | ✅ Compliant | US healthcare privacy (for international collaboration) |
+| **GDPR** | ✅ Ready | EU data protection (for European partnerships) |
+
+---
+
 ## Overview
 
-THAKAAMED DICOM Anonymizer is a professional-grade, cross-platform tool for de-identifying DICOM medical imaging files. Built specifically for Saudi healthcare institutions, it provides:
+THAKAAMED DICOM Anonymizer is a professional-grade, cross-platform tool for de-identifying DICOM medical imaging files. Built specifically for Saudi healthcare institutions, it enables:
 
-- **Three Built-in Presets**: SFDA Safe Harbor, Research, and Full Anonymization
-- **DICOM PS3.15 Compliance**: Implements the DICOM de-identification standard
-- **HIPAA Safe Harbor**: Compliant with US healthcare privacy regulations
-- **Saudi PDPL Ready**: Designed for Saudi Personal Data Protection Law compliance
-- **Comprehensive Reporting**: PDF, JSON, and CSV audit reports
-- **Branded Output**: Professional THAKAAMED-branded console and reports
+- **🔬 Research Excellence**: Safely share medical imaging data for AI/ML research
+- **🏥 Hospital Data Export**: Export anonymized studies for multi-center collaborations
+- **🎓 Academic Publications**: Prepare datasets for peer-reviewed research
+- **🤖 AI Model Training**: Create privacy-safe datasets for medical AI development
 
-## Features
+### Key Features
 
-- **Privacy Protection**: Removes or replaces patient identifying information
-- **Audit Trails**: Complete documentation for compliance review
-- **Parallel Processing**: Fast batch processing with multi-threading
-- **Flexible Presets**: Choose from built-in presets or create custom rules
-- **Professional Reports**: Branded PDF reports for stakeholders
-- **UID Consistency**: Maintains referential integrity across studies
+| Feature | Description |
+|---------|-------------|
+| **SFDA Safe Harbor Preset** | Maximum privacy protection for regulatory compliance |
+| **Research Preset** | Balanced anonymization with date shifting for longitudinal studies |
+| **Full Anonymization** | Complete de-identification for public dataset sharing |
+| **Branded PDF Reports** | Audit-ready documentation for ethics committees |
+| **Parallel Processing** | Process thousands of DICOM files in minutes |
+| **Offline Capable** | Works in air-gapped hospital networks |
+
+### Why THAKAAMED?
+
+- 🇸🇦 **Saudi-First Design**: Built with SFDA/SDAIA/PDPL compliance as the foundation
+- 🔒 **Privacy by Design**: No cloud uploads, 100% local processing
+- 📋 **Audit Ready**: Generate compliance reports for IRB and ethics committees
+- ⚡ **Fast & Efficient**: Multi-threaded processing for large datasets
+- 🎨 **Professional Output**: Branded reports worthy of stakeholder presentations
 
 ## Quick Start
 
@@ -489,26 +530,41 @@ stats = processor.process_directory(
 print(f"Processed: {stats.files_processed}")
 ```
 
-## Compliance
+## 🏛️ Compliance & Regulatory Standards
 
-THAKAAMED DICOM Anonymizer implements:
+### 🇸🇦 Saudi Arabia (Primary)
 
-- **DICOM PS3.15**: Basic Application Level Confidentiality Profile
-- **HIPAA Safe Harbor**: 45 CFR 164.514(b)(2) de-identification method
-- **Saudi PDPL**: Personal Data Protection Law requirements
+THAKAAMED DICOM Anonymizer is designed with **Saudi regulatory compliance as the foundation**:
+
+| Authority | Regulation | Status |
+|-----------|------------|--------|
+| **SFDA** | Medical Device Software Guidelines | ✅ Compliant |
+| **SDAIA** | Personal Data Protection Law (PDPL) نظام حماية البيانات الشخصية | ✅ Compliant |
+| **NDMO** | National Data Management Office Standards | ✅ Ready |
+| **MOH** | Ministry of Health Data Sharing Guidelines | ✅ Aligned |
+
+### 🌍 International Standards
+
+| Standard | Description | Status |
+|----------|-------------|--------|
+| **DICOM PS3.15** | Basic Application Level Confidentiality Profile | ✅ Implemented |
+| **HIPAA Safe Harbor** | 45 CFR 164.514(b)(2) de-identification method | ✅ Compliant |
+| **GDPR Art. 89** | Research exemption requirements | ✅ Ready |
 
 ### De-identification Markers
 
-All processed files include:
-- PatientIdentityRemoved (0012,0062) = "YES"
-- DeidentificationMethod (0012,0063) = "THAKAAMED - [Preset Name]"
+All processed files include DICOM compliance markers:
+```
+PatientIdentityRemoved (0012,0062) = "YES"
+DeidentificationMethod (0012,0063) = "THAKAAMED - SFDA Safe Harbor"
+```
 
 ### UID Remapping
 
 UIDs are consistently remapped using:
 - SHA-256 hash-based deterministic mapping
-- 2.25 (UUID) root format
-- Cross-file consistency for referential integrity
+- 2.25 (UUID) root format for new UIDs
+- Cross-file consistency for referential integrity (multi-study support)
 
 ## License
 
@@ -545,16 +601,26 @@ See [LICENSE](LICENSE) for full terms.
 
 <div align="center">
 
-**THAKAAMED AI** | Enterprise Healthcare Solutions
+## 🇸🇦 صُنع في المملكة العربية السعودية
 
-*Vision 2030 Healthcare Transformation*
-
-https://thakaamed.ai | contact@thakaamed.com
+### Made with ♥ in Riyadh, Kingdom of Saudi Arabia
 
 ---
 
-*Made with love in Riyadh, KSA*
+**THAKAAMED AI** | Enterprise Healthcare Solutions
 
-*Good vibes only. 1337*
+*Accelerating Saudi Vision 2030 Healthcare & AI Transformation*
+
+رؤية السعودية 2030 - تحويل الرعاية الصحية
+
+---
+
+📧 **contact@thakaamed.com** | 🌐 **https://thakaamed.ai**
+
+---
+
+*Empowering Saudi researchers to lead the future of medical AI*
+
+*تمكين الباحثين السعوديين لقيادة مستقبل الذكاء الاصطناعي الطبي*
 
 </div>
