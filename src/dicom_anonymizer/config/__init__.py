@@ -3,9 +3,9 @@
 """Configuration module for THAKAAMED DICOM Anonymizer."""
 
 from dicom_anonymizer.config.loader import (
-    get_bundled_presets_path,
     get_user_presets_path,
     list_available_presets,
+    list_preset_names,
     load_preset,
 )
 from dicom_anonymizer.config.models import (
@@ -24,6 +24,6 @@ __all__ = [
     "AppConfig",
     "load_preset",
     "list_available_presets",
-    "get_bundled_presets_path",
+    "list_preset_names",
     "get_user_presets_path",
 ]

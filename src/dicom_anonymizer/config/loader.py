@@ -10,14 +10,57 @@ import yaml
 from dicom_anonymizer.config.models import AppConfig, PresetConfig
 
 
-def get_bundled_presets_path() -> Path:
-    """Get path to bundled preset files."""
-    return Path(str(files("dicom_anonymizer.presets")))
-
-
 def get_user_presets_path() -> Path:
     """Get path to user preset files (in home directory)."""
     return Path.home() / ".dicom_anonymizer" / "presets"
+
+
+def _load_bundled_preset(name: str) -> PresetConfig | None:
+    """Load a bundled preset by name using importlib.resources.
+
+    This properly handles packaged resources whether installed as a wheel,
+    in a zip archive, or in development mode.
+
+    Args:
+        name: Preset name (without .yaml extension)
+
+    Returns:
+        PresetConfig if found, None otherwise
+    """
+    try:
+        presets_package = files("dicom_anonymizer.presets")
+        preset_file = presets_package.joinpath(f"{name}.yaml")
+
+        # Use read_text() which works for both filesystem and zip resources
+        if hasattr(preset_file, "read_text"):
+            try:
+                content = preset_file.read_text(encoding="utf-8")
+                data = yaml.safe_load(content)
+                if data:
+                    return PresetConfig(**data)
+            except FileNotFoundError:
+                pass
+    except Exception:
+        pass
+    return None
+
+
+def _list_bundled_preset_names() -> list[str]:
+    """List names of bundled presets using importlib.resources.
+
+    Returns:
+        List of preset names (without .yaml extension)
+    """
+    try:
+        presets_package = files("dicom_anonymizer.presets")
+        # iterdir() works on Traversable objects
+        return [
+            f.name.removesuffix(".yaml")
+            for f in presets_package.iterdir()
+            if f.name.endswith(".yaml")
+        ]
+    except Exception:
+        return []
 
 
 def load_preset(name_or_path: str | Path) -> PresetConfig:
@@ -37,27 +80,25 @@ def load_preset(name_or_path: str | Path) -> PresetConfig:
 
     # If it's a name (not a path), search for it
     if not path.suffix:
-        # Try bundled presets first
-        bundled = get_bundled_presets_path()
-        bundled_file = bundled / f"{name_or_path}.yaml"
+        # Try bundled presets first (using importlib.resources)
+        preset = _load_bundled_preset(str(name_or_path))
+        if preset is not None:
+            return preset
 
-        if bundled_file.exists():
-            path = bundled_file
+        # Try user presets (filesystem)
+        user_file = get_user_presets_path() / f"{name_or_path}.yaml"
+        if user_file.exists():
+            path = user_file
         else:
-            # Try user presets
-            user_file = get_user_presets_path() / f"{name_or_path}.yaml"
-            if user_file.exists():
-                path = user_file
-            else:
-                raise FileNotFoundError(
-                    f"Preset '{name_or_path}' not found in bundled or user presets. "
-                    f"Available bundled presets: {list_preset_names()}"
-                )
+            raise FileNotFoundError(
+                f"Preset '{name_or_path}' not found in bundled or user presets. "
+                f"Available bundled presets: {list_preset_names()}"
+            )
 
     if not path.exists():
         raise FileNotFoundError(f"Configuration file not found: {path}")
 
-    # Load YAML (secure loading)
+    # Load YAML from filesystem (secure loading)
     try:
         with open(path) as f:
             data = yaml.safe_load(f)
@@ -99,36 +140,32 @@ def load_app_config(path: str | Path) -> AppConfig:
 
 def list_preset_names() -> list[str]:
     """List names of all available bundled presets."""
-    bundled = get_bundled_presets_path()
-    if not bundled.exists():
-        return []
-    return [p.stem for p in bundled.glob("*.yaml")]
+    return _list_bundled_preset_names()
 
 
 def list_available_presets() -> list[dict]:
     """List all available presets (bundled + user) with details."""
     presets = []
 
-    # Bundled presets
-    bundled = get_bundled_presets_path()
-    if bundled.exists():
-        for yaml_file in bundled.glob("*.yaml"):
-            try:
-                config = load_preset(yaml_file)
+    # Bundled presets (using importlib.resources)
+    for preset_name in _list_bundled_preset_names():
+        try:
+            config = _load_bundled_preset(preset_name)
+            if config:
                 presets.append(
                     {
                         "name": config.name,
-                        "filename": yaml_file.stem,
+                        "filename": preset_name,
                         "description": config.description,
                         "location": "bundled",
-                        "path": str(yaml_file),
+                        "path": f"<bundled>/{preset_name}.yaml",
                         "compliance": config.compliance,
                     }
                 )
-            except Exception:
-                pass  # Skip invalid presets
+        except Exception:
+            pass  # Skip invalid presets
 
-    # User presets
+    # User presets (filesystem)
     user_dir = get_user_presets_path()
     if user_dir.exists():
         for yaml_file in user_dir.glob("*.yaml"):

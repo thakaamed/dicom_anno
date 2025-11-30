@@ -3,7 +3,6 @@
 import pytest
 
 from dicom_anonymizer.config.loader import (
-    get_bundled_presets_path,
     get_user_presets_path,
     list_available_presets,
     list_preset_names,
@@ -104,11 +103,16 @@ class TestListPresets:
 class TestPresetPaths:
     """Tests for preset path functions."""
 
-    def test_bundled_presets_path_exists(self):
-        """Bundled presets directory exists."""
-        path = get_bundled_presets_path()
-        assert path.exists()
-        assert path.is_dir()
+    def test_bundled_presets_accessible(self):
+        """Bundled presets are accessible via importlib.resources."""
+        # Verify bundled presets can be loaded (proves resources are accessible)
+        names = list_preset_names()
+        assert len(names) >= 3
+        assert "sfda_safe_harbor" in names
+
+        # Verify we can actually load content from bundled presets
+        preset = load_preset("sfda_safe_harbor")
+        assert preset.name == "SFDA Safe Harbor"
 
     def test_user_presets_path(self):
         """User presets path is in home directory."""
