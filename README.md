@@ -531,7 +531,7 @@ This software is provided for **RESEARCH AND EDUCATIONAL PURPOSES ONLY**.
 
 For commercial use, production deployment, or healthcare facility integration, please contact:
 
-**Email:** licensing@thakaamed.com | **Web:** https://thakaamed.com/licensing
+**Email:** licensing@thakaamed.com | **Web:** https://thakaamed.ai/licensing
 
 See [LICENSE](LICENSE) for full terms.
 
@@ -549,7 +549,7 @@ See [LICENSE](LICENSE) for full terms.
 
 *Vision 2030 Healthcare Transformation*
 
-https://thakaamed.com | info@thakaamed.com
+https://thakaamed.ai | contact@thakaamed.com
 
 ---
 
