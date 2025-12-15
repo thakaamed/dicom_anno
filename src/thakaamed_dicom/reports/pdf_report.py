@@ -26,20 +26,21 @@ from reportlab.platypus import Image, KeepTogether, PageBreak, Paragraph, Simple
 from thakaamed_dicom.reports.models import ReportData
 
 # ============================================================================
-# THAKAAMED Brand Colors - Purple/Lavender Palette with Gold Accents
+# THAKAAMED Brand Colors - Purple/White/Black Palette (No Gold/Yellow)
 # ============================================================================
-BRAND_PURPLE_DARK = colors.HexColor("#2D1B4E")    # Deep purple (headers, primary)
+BRAND_PURPLE_DARK = colors.HexColor("#2D1B4E")    # Deep purple (headers, borders, primary)
 BRAND_PURPLE = colors.HexColor("#4A3069")          # Medium purple
 BRAND_PURPLE_LIGHT = colors.HexColor("#E8E0F0")   # Light lavender (backgrounds)
 BRAND_LAVENDER = colors.HexColor("#9B8BB8")        # Lavender accent
-BRAND_GOLD = colors.HexColor("#C9A227")            # Gold accent (was green)
-BRAND_GOLD_BRIGHT = colors.HexColor("#D4AF37")    # Bright gold
-BRAND_GOLD_LIGHT = colors.HexColor("#F5E6B3")     # Light gold
 BRAND_WHITE = colors.HexColor("#FFFFFF")
+BRAND_BLACK = colors.HexColor("#000000")
 BRAND_GRAY = colors.HexColor("#6B7280")
 BRAND_GRAY_LIGHT = colors.HexColor("#F3F4F6")
 BRAND_TEXT_DARK = colors.HexColor("#1F1635")      # Dark purple for text
 BRAND_GREEN_SAUDI = colors.HexColor("#006C35")    # Saudi green (Vision 2030 only)
+
+# Accent color for section underlines (now using dark purple instead of gold)
+BRAND_ACCENT = BRAND_PURPLE_DARK
 
 # Legacy aliases for compatibility
 BRAND_PRIMARY = BRAND_PURPLE_DARK
@@ -48,6 +49,9 @@ BRAND_TEAL = BRAND_PURPLE_DARK
 BRAND_TEAL_DARK = BRAND_PURPLE_DARK
 BRAND_TEAL_LIGHT = BRAND_PURPLE_LIGHT
 BRAND_NAVY = BRAND_TEXT_DARK
+# Keep BRAND_GOLD as alias pointing to dark purple for any remaining references
+BRAND_GOLD = BRAND_PURPLE_DARK
+BRAND_GOLD_BRIGHT = BRAND_PURPLE_DARK
 
 
 class NumberedCanvas(canvas.Canvas):
@@ -131,13 +135,13 @@ class PDFReportBuilder:
             )
         )
         
-        # Subtitle under title - Gold
+        # Subtitle under title - Lavender
         styles.add(
             ParagraphStyle(
                 name="ReportSubtitle",
                 parent=styles["Normal"],
                 fontSize=12,
-                textColor=BRAND_GOLD,
+                textColor=BRAND_LAVENDER,
                 alignment=TA_CENTER,
                 spaceAfter=20,
                 fontName="Helvetica-Bold",
@@ -274,13 +278,13 @@ class PDFReportBuilder:
         canvas_obj.setFillColor(BRAND_PURPLE_DARK)
         canvas_obj.rect(0, page_height - 0.4 * inch, page_width, 0.4 * inch, fill=1, stroke=0)
         
-        # Gold accent line under purple
-        canvas_obj.setStrokeColor(BRAND_GOLD_BRIGHT)
+        # White accent line under purple
+        canvas_obj.setStrokeColor(BRAND_WHITE)
         canvas_obj.setLineWidth(3)
         canvas_obj.line(0, page_height - 0.4 * inch, page_width, page_height - 0.4 * inch)
         
-        # Header text on purple banner
-        canvas_obj.setFillColor(BRAND_GOLD)
+        # Header text on purple banner (white text)
+        canvas_obj.setFillColor(BRAND_WHITE)
         canvas_obj.setFont("Helvetica-Bold", 11)
         canvas_obj.drawString(0.75 * inch, page_height - 0.28 * inch, "THAKAAMED")
         
@@ -290,8 +294,8 @@ class PDFReportBuilder:
                                    "DICOM Anonymization Report")
 
         # ========== FOOTER ==========
-        # Gold accent line
-        canvas_obj.setStrokeColor(BRAND_GOLD)
+        # Dark purple accent line
+        canvas_obj.setStrokeColor(BRAND_PURPLE_DARK)
         canvas_obj.setLineWidth(2)
         canvas_obj.line(0.75 * inch, 0.8 * inch, page_width - 0.75 * inch, 0.8 * inch)
         
@@ -306,7 +310,7 @@ class PDFReportBuilder:
         canvas_obj.drawCentredString(page_width / 2, 0.6 * inch, "Vision 2030 Healthcare Transformation")
         
         # Footer text - right side
-        canvas_obj.setFillColor(BRAND_LAVENDER)
+        canvas_obj.setFillColor(BRAND_GRAY)
         canvas_obj.setFont("Helvetica", 7)
         canvas_obj.drawRightString(page_width - 0.75 * inch, 0.6 * inch, "CONFIDENTIAL")
         
@@ -314,8 +318,8 @@ class PDFReportBuilder:
         canvas_obj.setFillColor(BRAND_PURPLE_DARK)
         canvas_obj.rect(0, 0, page_width, 0.3 * inch, fill=1, stroke=0)
         
-        # Website in footer stripe (gold text)
-        canvas_obj.setFillColor(BRAND_GOLD)
+        # Website in footer stripe (white text)
+        canvas_obj.setFillColor(BRAND_WHITE)
         canvas_obj.setFont("Helvetica", 7)
         canvas_obj.drawCentredString(page_width / 2, 0.12 * inch, "https://thakaamed.ai | contact@thakaamed.com")
 
@@ -370,7 +374,7 @@ class PDFReportBuilder:
         story.append(HRFlowable(
             width="80%", 
             thickness=2, 
-            color=BRAND_GOLD, 
+            color=BRAND_PURPLE_DARK, 
             spaceBefore=10, 
             spaceAfter=15,
             hAlign='CENTER'
@@ -404,12 +408,12 @@ class PDFReportBuilder:
     def _add_executive_summary(self, story, report_data: ReportData):
         """Add THAKAAMED branded executive summary section."""
         story.append(Paragraph("📋 EXECUTIVE SUMMARY", self.styles["SectionHeader"]))
-        story.append(HRFlowable(width="30%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
+        story.append(HRFlowable(width="30%", thickness=2, color=BRAND_PURPLE_DARK, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
 
         # Status determination
         if report_data.files_failed == 0:
             status = "✓ COMPLETE"
-            status_color = BRAND_GOLD  # Gold for success
+            status_color = BRAND_GREEN_SAUDI  # Saudi green for success
         else:
             status = "⚠ COMPLETED WITH ERRORS"
             status_color = colors.HexColor("#D97706")  # Amber
@@ -456,7 +460,7 @@ class PDFReportBuilder:
         """Add THAKAAMED branded statistics table."""
         # Section header with gold underline
         story.append(Paragraph("📊 PROCESSING STATISTICS", self.styles["SectionHeader"]))
-        story.append(HRFlowable(width="30%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
+        story.append(HRFlowable(width="30%", thickness=2, color=BRAND_PURPLE_DARK, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
 
         data = [
             ["Metric", "Count"],
@@ -486,7 +490,7 @@ class PDFReportBuilder:
                     # Alternating row colors - teal tint
                     ("ROWBACKGROUNDS", (0, 1), (-1, -1), [BRAND_WHITE, BRAND_TEAL_LIGHT]),
                     # Border styling
-                    ("LINEBELOW", (0, 0), (-1, 0), 2, BRAND_GOLD),
+                    ("LINEBELOW", (0, 0), (-1, 0), 2, BRAND_PURPLE_DARK),
                     ("LINEBELOW", (0, -1), (-1, -1), 1, BRAND_TEAL),
                     ("LINEBEFORE", (0, 0), (0, -1), 1, BRAND_TEAL),
                     ("LINEAFTER", (-1, 0), (-1, -1), 1, BRAND_TEAL),
@@ -504,7 +508,7 @@ class PDFReportBuilder:
     def _add_preset_config(self, story, report_data: ReportData):
         """Add THAKAAMED branded preset configuration section."""
         story.append(Paragraph("⚙️ PRESET CONFIGURATION", self.styles["SectionHeader"]))
-        story.append(HRFlowable(width="30%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
+        story.append(HRFlowable(width="30%", thickness=2, color=BRAND_PURPLE_DARK, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
 
         # Config details in a table - use Paragraph for description to allow word wrapping
         desc_paragraph = Paragraph(report_data.preset_description, self.styles["TableCell"])
@@ -558,14 +562,14 @@ class PDFReportBuilder:
             ('FONTNAME', (0, 1), (0, -1), 'Helvetica-Bold'),
             ('FONTNAME', (1, 1), (-1, -1), 'Helvetica'),
             ('FONTSIZE', (0, 1), (-1, -1), 8),
-            ('TEXTCOLOR', (0, 1), (0, -1), BRAND_GOLD),  # Code in gold
-            ('TEXTCOLOR', (1, 1), (1, -1), BRAND_PURPLE_DARK),  # Action in purple
+            ('TEXTCOLOR', (0, 1), (0, -1), BRAND_PURPLE_DARK),  # Code in dark purple
+            ('TEXTCOLOR', (1, 1), (1, -1), BRAND_PURPLE_DARK),  # Action in dark purple
             ('TEXTCOLOR', (2, 1), (2, -1), BRAND_TEXT_DARK),
             ('ALIGN', (0, 0), (0, -1), 'CENTER'),
             ('ALIGN', (1, 0), (1, -1), 'CENTER'),
             ('BACKGROUND', (0, 1), (-1, -1), BRAND_PURPLE_LIGHT),
             ('BOX', (0, 0), (-1, -1), 1, BRAND_PURPLE_DARK),
-            ('LINEBELOW', (0, 0), (-1, 0), 2, BRAND_GOLD),
+            ('LINEBELOW', (0, 0), (-1, 0), 2, BRAND_PURPLE_DARK),
             ('GRID', (0, 1), (-1, -1), 0.5, BRAND_LAVENDER),
             ('TOPPADDING', (0, 0), (-1, -1), 6),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
@@ -601,13 +605,13 @@ class PDFReportBuilder:
                 ('TEXTCOLOR', (0, 0), (-1, 0), BRAND_WHITE),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
                 ('FONTSIZE', (0, 0), (-1, 0), 9),
-                ('LINEBELOW', (0, 0), (-1, 0), 2, BRAND_GOLD),
+                ('LINEBELOW', (0, 0), (-1, 0), 2, BRAND_PURPLE_DARK),
                 # Data rows
                 ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
                 ('FONTSIZE', (0, 1), (-1, -1), 7),
                 ('TEXTCOLOR', (0, 1), (0, -1), BRAND_PURPLE),  # Tags in purple
                 ('TEXTCOLOR', (1, 1), (1, -1), BRAND_TEXT_DARK),
-                ('TEXTCOLOR', (2, 1), (2, -1), BRAND_GOLD),  # Actions in gold
+                ('TEXTCOLOR', (2, 1), (2, -1), BRAND_PURPLE_DARK),  # Actions in dark purple
                 ('ALIGN', (2, 0), (2, -1), 'CENTER'),
                 ('ROWBACKGROUNDS', (0, 1), (-1, -1), [BRAND_WHITE, BRAND_PURPLE_LIGHT]),
                 ('BOX', (0, 0), (-1, -1), 1, BRAND_PURPLE_DARK),
@@ -623,7 +627,7 @@ class PDFReportBuilder:
     def _add_file_manifest(self, story, report_data: ReportData):
         """Add THAKAAMED branded file manifest table."""
         story.append(Paragraph("📁 FILE MANIFEST", self.styles["SectionHeader"]))
-        story.append(HRFlowable(width="30%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
+        story.append(HRFlowable(width="30%", thickness=2, color=BRAND_PURPLE_DARK, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
 
         if not report_data.file_records:
             story.append(Paragraph("No file records available.", self.styles["Normal"]))
@@ -674,7 +678,7 @@ class PDFReportBuilder:
                     ("TEXTCOLOR", (0, 0), (-1, 0), BRAND_WHITE),
                     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                     ("FONTSIZE", (0, 0), (-1, 0), 9),
-                    ("LINEBELOW", (0, 0), (-1, 0), 2, BRAND_GOLD),
+                    ("LINEBELOW", (0, 0), (-1, 0), 2, BRAND_PURPLE_DARK),
                     # Data
                     ("ALIGN", (1, 0), (1, -1), "CENTER"),
                     ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
@@ -699,7 +703,7 @@ class PDFReportBuilder:
         compliance_content = []
         
         compliance_content.append(Paragraph("🔒 COMPLIANCE STATEMENT", self.styles["SectionHeader"]))
-        compliance_content.append(HRFlowable(width="30%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
+        compliance_content.append(HRFlowable(width="30%", thickness=2, color=BRAND_PURPLE_DARK, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
 
         # Compliance box with teal border
         compliance_items = [
@@ -718,7 +722,7 @@ class PDFReportBuilder:
             ('TEXTCOLOR', (0, 1), (-1, -1), BRAND_NAVY),
             ('BACKGROUND', (0, 1), (-1, -1), BRAND_TEAL_LIGHT),
             ('BOX', (0, 0), (-1, -1), 1, BRAND_TEAL),
-            ('LINEBELOW', (0, 0), (-1, 0), 2, BRAND_GOLD),
+            ('LINEBELOW', (0, 0), (-1, 0), 2, BRAND_PURPLE_DARK),
             ('TOPPADDING', (0, 0), (-1, -1), 8),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
             ('LEFTPADDING', (0, 0), (-1, -1), 10),
@@ -747,7 +751,7 @@ class PDFReportBuilder:
         sig_content = []
         
         sig_content.append(Paragraph("🔐 DIGITAL SIGNATURE", self.styles["SectionHeader"]))
-        sig_content.append(HRFlowable(width="30%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
+        sig_content.append(HRFlowable(width="30%", thickness=2, color=BRAND_PURPLE_DARK, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
 
         hash_display = report_data.report_hash[:32] + "..." if report_data.report_hash else "N/A"
         
@@ -774,7 +778,7 @@ class PDFReportBuilder:
         
         # Vision 2030 closing
         sig_content.append(Spacer(1, 0.5 * inch))
-        sig_content.append(HRFlowable(width="100%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=15, hAlign='CENTER'))
+        sig_content.append(HRFlowable(width="100%", thickness=2, color=BRAND_PURPLE_DARK, spaceBefore=0, spaceAfter=15, hAlign='CENTER'))
         
         # Final branded footer - Purple theme
         sig_content.append(Paragraph(
@@ -792,12 +796,12 @@ class PDFReportBuilder:
         ))
         sig_content.append(Spacer(1, 0.15 * inch))
         sig_content.append(Paragraph(
-            "<font color='#C9A227' size='9'><b>Made with ♥ in Riyadh</b></font>",
+            "<font color='#2D1B4E' size='9'><b>Made with ♥ in Riyadh</b></font>",
             ParagraphStyle('MadeWithLove', alignment=TA_CENTER)
         ))
         sig_content.append(Spacer(1, 0.05 * inch))
         sig_content.append(Paragraph(
-            "<font color='#9B8BB8' size='8'>https://thakaamed.ai | contact@thakaamed.com</font>",
+            "<font color='#6B7280' size='8'>https://thakaamed.ai | contact@thakaamed.com</font>",
             ParagraphStyle('ContactInfo', alignment=TA_CENTER)
         ))
         
