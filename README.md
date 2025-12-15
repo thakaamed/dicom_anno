@@ -79,21 +79,69 @@ THAKAAMED DICOM Anonymizer is a professional-grade, cross-platform tool for de-i
 
 ## Quick Start
 
-### Installation (Online)
+### Installation from Source
+
+> **Note:** This package is not yet published to PyPI. Install from source using the steps below.
+
+#### Step 1: Clone or Download the Repository
 
 ```bash
-# Clone/navigate to the project
-cd DICOM-ANNO
+# Clone the repository (or download and extract the ZIP)
+git clone https://github.com/thakaamed/dicom-anonymizer.git
+cd dicom-anonymizer
+```
 
-# Create virtual environment and install (using uv - recommended)
-uv venv
+#### Step 2: Create Virtual Environment
+
+```bash
+# Create virtual environment
+python -m venv .venv
+
+# Activate it
+# Linux/macOS:
 source .venv/bin/activate
-uv pip install -e ".[dev]"
+# Windows:
+.venv\Scripts\activate
+```
 
-# Or using pip
+#### Step 3: Install Dependencies
+
+```bash
+# Install from requirements.txt
+pip install -r requirements.txt
+
+# Install the package in editable mode
+pip install -e .
+```
+
+#### Step 4: Verify Installation
+
+```bash
+# Check version
+thakaamed-dicom version
+
+# List available presets
+thakaamed-dicom presets
+```
+
+#### Quick Copy-Paste (Linux/macOS)
+
+```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev]"
+pip install -r requirements.txt
+pip install -e .
+thakaamed-dicom version
+```
+
+#### Quick Copy-Paste (Windows)
+
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+pip install -e .
+thakaamed-dicom version
 ```
 
 ---

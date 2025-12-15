@@ -10,50 +10,54 @@ Complete installation instructions for THAKAAMED DICOM Anonymizer.
 
 ## Installation Methods
 
-### Local Installation (Development/Testing)
+### Installation from Source (Current Method)
 
-For testing before publishing, install from the local source:
+> **Note:** This package is not yet published to PyPI. Install from source using the steps below.
 
 ```bash
 # Navigate to the project directory
-cd DICOM-ANNO
+cd dicom_anno
 
 # Create and activate virtual environment
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# Install in editable mode with dev dependencies (using uv - recommended)
-uv pip install -e ".[dev]"
+# Install dependencies from requirements.txt
+pip install -r requirements.txt
 
-# Or using pip
+# Install in editable mode
+pip install -e .
+
+# For development (includes pytest, ruff, mypy)
 pip install -e ".[dev]"
 ```
 
 This installs the package in "editable" mode, meaning changes to the source code are immediately reflected without reinstalling.
 
-### Using uv (Recommended)
+### Quick Install (Copy-Paste)
 
-[uv](https://github.com/astral-sh/uv) is a fast Python package manager:
-
+**Linux/macOS:**
 ```bash
-# Install uv if not already installed
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Create venv and install from local source
-uv venv
+python -m venv .venv
 source .venv/bin/activate
-uv pip install -e ".[dev]"
+pip install -r requirements.txt
+pip install -e .
 ```
 
-### From PyPI (After Publishing)
+**Windows:**
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+pip install -e .
+```
 
-Once the package is published to PyPI:
+### From PyPI (Coming Soon)
+
+Once the package is published to PyPI, installation will be simpler:
 
 ```bash
 pip install thakaamed-dicom
-
-# Or with uv
-uv pip install thakaamed-dicom
 ```
 
 ## Verifying Installation
@@ -110,11 +114,12 @@ When installing with `[dev]`, additional packages are included:
 - Some terminals may not render Unicode correctly; use Windows Terminal for best results
 
 ```powershell
-# Windows local installation
-cd DICOM-ANNO
+# Windows installation
+cd dicom_anno
 py -m venv .venv
 .venv\Scripts\activate
-py -m pip install -e ".[dev]"
+pip install -r requirements.txt
+pip install -e .
 ```
 
 ### macOS
@@ -123,11 +128,12 @@ py -m pip install -e ".[dev]"
 - Install Python via Homebrew if needed: `brew install python@3.11`
 
 ```bash
-# macOS local installation
-cd DICOM-ANNO
+# macOS installation
+cd dicom_anno
 python3 -m venv .venv
 source .venv/bin/activate
-pip3 install -e ".[dev]"
+pip install -r requirements.txt
+pip install -e .
 ```
 
 ### Linux
@@ -140,11 +146,12 @@ pip3 install -e ".[dev]"
 sudo apt update
 sudo apt install python3 python3-pip python3-venv
 
-# Local installation
-cd DICOM-ANNO
+# Installation
+cd dicom_anno
 python3 -m venv .venv
 source .venv/bin/activate
-pip3 install -e ".[dev]"
+pip install -r requirements.txt
+pip install -e .
 ```
 
 ## Virtual Environment Setup
@@ -162,8 +169,9 @@ source thakaamed-env/bin/activate
 thakaamed-env\Scripts\activate
 
 # Install from local source
-cd DICOM-ANNO
-pip install -e ".[dev]"
+cd dicom_anno
+pip install -r requirements.txt
+pip install -e .
 
 # When done, deactivate
 deactivate
@@ -179,7 +187,7 @@ FROM python:3.11-slim
 WORKDIR /app
 COPY . /app
 
-RUN pip install -e .
+RUN pip install -r requirements.txt && pip install -e .
 
 ENTRYPOINT ["thakaamed-dicom"]
 ```
@@ -187,7 +195,7 @@ ENTRYPOINT ["thakaamed-dicom"]
 Build and run:
 
 ```bash
-# From the DICOM-ANNO directory
+# From the dicom_anno directory
 docker build -t thakaamed-dicom .
 docker run -v /path/to/dicom:/data thakaamed-dicom anonymize \
     -i /data/input -o /data/output -p sfda_safe_harbor
@@ -203,7 +211,8 @@ docker run -v /path/to/dicom:/data thakaamed-dicom anonymize \
 # Use a virtual environment (recommended)
 python -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev]"
+pip install -r requirements.txt
+pip install -e .
 ```
 
 **Command not found after installation**
@@ -233,7 +242,7 @@ If you encounter issues:
 
 1. Ensure you're using Python 3.10+: `python --version`
 2. Ensure virtual environment is activated
-3. Try reinstalling: `pip install -e ".[dev]" --force-reinstall`
+3. Try reinstalling: `pip install -r requirements.txt && pip install -e . --force-reinstall`
 
 ## Upgrading (Local Development)
 
@@ -244,7 +253,8 @@ To get the latest changes when developing locally:
 git pull
 
 # Reinstall if dependencies changed
-pip install -e ".[dev]"
+pip install -r requirements.txt
+pip install -e .
 ```
 
 ## Uninstalling
