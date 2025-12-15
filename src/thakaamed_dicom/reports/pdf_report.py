@@ -705,12 +705,12 @@ class PDFReportBuilder:
         compliance_content.append(Paragraph("🔒 COMPLIANCE STATEMENT", self.styles["SectionHeader"]))
         compliance_content.append(HRFlowable(width="30%", thickness=2, color=BRAND_PURPLE_DARK, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
 
-        # Compliance box with teal border
+        # Compliance box with teal border - Saudi standards first
         compliance_items = [
             ["Standard", "Description"],
+            ["SDAIA PDPL", "Saudi Personal Data Protection Law (نظام حماية البيانات الشخصية)"],
+            ["SFDA Guidelines", "Medical Device Software Data Protection Requirements"],
             ["DICOM PS3.15", "Basic Application Level Confidentiality Profile"],
-            ["HIPAA Safe Harbor", "45 CFR 164.514(b)(2) De-identification Method"],
-            ["Saudi PDPL", "Personal Data Protection Law Requirements"],
         ]
         
         compliance_table = Table(compliance_items, colWidths=[1.8 * inch, 4.3 * inch])
@@ -753,7 +753,8 @@ class PDFReportBuilder:
         sig_content.append(Paragraph("🔐 DIGITAL SIGNATURE", self.styles["SectionHeader"]))
         sig_content.append(HRFlowable(width="30%", thickness=2, color=BRAND_PURPLE_DARK, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
 
-        hash_display = report_data.report_hash[:32] + "..." if report_data.report_hash else "N/A"
+        # Show full hash - it's important for audit/verification
+        hash_display = report_data.report_hash if report_data.report_hash else "N/A"
         
         sig_data = [
             ["Report Hash (SHA-256)", hash_display],

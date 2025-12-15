@@ -3,14 +3,13 @@
 # Maximum anonymization for high-security requirements
 
 name: "Full Anonymization"
-description: "Complete de-identification removing all identifying information. Use when maximum privacy is required."
+description: "Complete de-identification removing all identifying information per SDAIA PDPL and DICOM PS3.15. Maximum privacy for public dataset sharing."
 version: "1.0.0"
 
 compliance:
+  - "SDAIA PDPL (Saudi Personal Data Protection Law)"
   - "DICOM PS3.15 Basic Profile"
-  - "HIPAA Safe Harbor Method"
-  - "Saudi PDPL"
-  - "Maximum Privacy"
+  - "Maximum Privacy Level"
 
 # Profile options - most restrictive, no retention
 clean_pixel_data: true
@@ -25,7 +24,7 @@ retain_safe_private: false
 date_handling: "remove"
 date_shift_base: null
 
-# Age handling - strict HIPAA compliance
+# Age handling - ages >89 generalized to 90+ for privacy
 age_threshold: 89
 
 # Remove ALL private tags with no exceptions

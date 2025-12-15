@@ -1,15 +1,15 @@
 # SFDA Safe Harbor Preset
-# Most restrictive de-identification for HIPAA Safe Harbor compliance
-# Suitable for data export outside Saudi Arabia or public sharing
+# Maximum de-identification compliant with Saudi SDAIA Personal Data Protection Law (PDPL)
+# Suitable for data export, research sharing, and multi-center collaborations
 
 name: "SFDA Safe Harbor"
-description: "Maximum privacy protection compliant with HIPAA Safe Harbor method. Removes all 18 HIPAA identifiers."
+description: "Maximum privacy protection compliant with SDAIA PDPL (Saudi Personal Data Protection Law). Removes all personal identifiers per DICOM PS3.15 Basic Profile."
 version: "1.0.0"
 
 compliance:
+  - "SDAIA PDPL (Saudi Personal Data Protection Law)"
+  - "SFDA Medical Device Guidelines"
   - "DICOM PS3.15 Basic Profile"
-  - "HIPAA Safe Harbor Method"
-  - "Saudi PDPL"
 
 # Profile options - most restrictive
 clean_pixel_data: true
@@ -24,7 +24,7 @@ retain_safe_private: false
 date_handling: "remove"
 date_shift_base: null
 
-# Age handling - HIPAA requires ages >89 to become 90+
+# Age handling - ages >89 generalized to 90+ for privacy
 age_threshold: 89
 
 # Remove all private tags
