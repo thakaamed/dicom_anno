@@ -12,9 +12,11 @@
 # ============================================================================
 """DICOM anonymization processor."""
 
+import hashlib
 import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
@@ -26,6 +28,38 @@ from thakaamed_dicom.engine.actions import ActionFactory
 from thakaamed_dicom.engine.date_shifter import DateShifter
 from thakaamed_dicom.engine.statistics import FileStatistics, ProcessingStatistics
 from thakaamed_dicom.engine.uid_mapper import UIDMapper
+
+
+@dataclass
+class AnonymizedFileInfo:
+    """Information about anonymized file for path generation."""
+    
+    study_uid_hash: str
+    series_uid_hash: str
+    sop_uid_hash: str
+    
+    # Counter for files without UIDs
+    _unknown_counter: int = 0
+    
+    @staticmethod
+    def generate_hash(uid: str, length: int = 12, fallback_random: bool = True) -> str:
+        """Generate a short hash from a UID.
+        
+        Args:
+            uid: The UID to hash
+            length: Length of the hash output
+            fallback_random: If True, generate random hash for empty UIDs
+        """
+        if not uid:
+            if fallback_random:
+                # Generate random hash for files without UIDs
+                import uuid
+                random_id = str(uuid.uuid4())
+                hash_bytes = hashlib.sha256(random_id.encode()).hexdigest()
+                return hash_bytes[:length]
+            return "unknown"
+        hash_bytes = hashlib.sha256(uid.encode()).hexdigest()
+        return hash_bytes[:length]
 
 
 class DicomProcessor:
@@ -58,7 +92,8 @@ class DicomProcessor:
     def process_file(
         self,
         input_path: Path,
-        output_path: Path,
+        output_path: Path | None = None,
+        output_dir: Path | None = None,
         dry_run: bool = False,
     ) -> FileStatistics:
         """
@@ -66,7 +101,8 @@ class DicomProcessor:
 
         Args:
             input_path: Path to input DICOM file
-            output_path: Path for output file
+            output_path: Explicit path for output file (if None, uses anonymous naming)
+            output_dir: Base output directory for anonymous naming
             dry_run: If True, don't write output file
 
         Returns:
@@ -84,6 +120,11 @@ class DicomProcessor:
                 stats.study_uid = str(ds.StudyInstanceUID)
             if hasattr(ds, "SeriesInstanceUID") and ds.SeriesInstanceUID:
                 stats.series_uid = str(ds.SeriesInstanceUID)
+            
+            # Capture original SOPInstanceUID for anonymous filename generation
+            original_sop_uid = ""
+            if hasattr(ds, "SOPInstanceUID") and ds.SOPInstanceUID:
+                original_sop_uid = str(ds.SOPInstanceUID)
 
             # Apply tag rules
             for rule in self.preset.tag_rules:
@@ -110,8 +151,18 @@ class DicomProcessor:
             # Set de-identification markers
             self._set_deidentification_markers(ds)
 
+            # Determine output path
+            if output_path is None and output_dir is not None:
+                # Generate anonymous path using Study/Series/SOP structure
+                output_path = self._generate_anonymous_path(
+                    output_dir,
+                    stats.study_uid,
+                    stats.series_uid,
+                    original_sop_uid,
+                )
+
             # Write output file
-            if not dry_run:
+            if not dry_run and output_path is not None:
                 output_path.parent.mkdir(parents=True, exist_ok=True)
                 ds.save_as(str(output_path))
 
@@ -124,6 +175,33 @@ class DicomProcessor:
 
         stats.processing_time_ms = (time.time() - start_time) * 1000
         return stats
+    
+    def _generate_anonymous_path(
+        self,
+        output_dir: Path,
+        study_uid: str,
+        series_uid: str,
+        sop_uid: str,
+    ) -> Path:
+        """
+        Generate anonymous file path using hash-based naming.
+        
+        Structure: output_dir/Study_<hash>/Series_<hash>/<hash>.dcm
+        
+        Args:
+            output_dir: Base output directory
+            study_uid: Original StudyInstanceUID
+            series_uid: Original SeriesInstanceUID  
+            sop_uid: Original SOPInstanceUID
+            
+        Returns:
+            Anonymous output path
+        """
+        study_hash = AnonymizedFileInfo.generate_hash(study_uid, 8)
+        series_hash = AnonymizedFileInfo.generate_hash(series_uid, 8)
+        sop_hash = AnonymizedFileInfo.generate_hash(sop_uid, 12)
+        
+        return output_dir / f"Study_{study_hash}" / f"Series_{series_hash}" / f"{sop_hash}.dcm"
 
     def _handle_standard_uids(self, ds) -> int:
         """Remap standard UIDs and return count."""
@@ -193,6 +271,7 @@ class DicomProcessor:
         workers: int = 4,
         dry_run: bool = False,
         progress_callback: Callable[[int, int], None] | None = None,
+        anonymous_filenames: bool = True,
     ) -> ProcessingStatistics:
         """
         Process all DICOM files in directory.
@@ -204,6 +283,8 @@ class DicomProcessor:
             workers: Number of parallel workers
             dry_run: If True, don't write output files
             progress_callback: Called with (completed, total) for progress updates
+            anonymous_filenames: If True, use hash-based anonymous filenames
+                                organized by Study/Series folders
 
         Returns:
             ProcessingStatistics with aggregate results
@@ -218,10 +299,19 @@ class DicomProcessor:
             return stats
 
         def process_one(input_path: Path) -> FileStatistics:
-            # Calculate relative path for output
-            rel_path = input_path.relative_to(input_dir)
-            output_path = output_dir / rel_path
-            return self.process_file(input_path, output_path, dry_run)
+            if anonymous_filenames:
+                # Use anonymous hash-based naming with Study/Series folders
+                return self.process_file(
+                    input_path, 
+                    output_path=None, 
+                    output_dir=output_dir, 
+                    dry_run=dry_run
+                )
+            else:
+                # Legacy: preserve original relative path structure
+                rel_path = input_path.relative_to(input_dir)
+                output_path = output_dir / rel_path
+                return self.process_file(input_path, output_path=output_path, dry_run=dry_run)
 
         if parallel and workers > 1:
             # Parallel processing
