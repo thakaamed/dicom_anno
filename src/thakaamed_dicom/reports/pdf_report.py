@@ -21,7 +21,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
-from reportlab.platypus import Image, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle, HRFlowable
+from reportlab.platypus import Image, KeepTogether, PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle, HRFlowable
 
 from thakaamed_dicom.reports.models import ReportData
 
@@ -506,10 +506,11 @@ class PDFReportBuilder:
         story.append(Paragraph("⚙️ PRESET CONFIGURATION", self.styles["SectionHeader"]))
         story.append(HRFlowable(width="30%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
 
-        # Config details in a table
+        # Config details in a table - use Paragraph for description to allow word wrapping
+        desc_paragraph = Paragraph(report_data.preset_description, self.styles["TableCell"])
         config_data = [
             ["Profile", report_data.preset_name],
-            ["Description", report_data.preset_description[:80] + "..." if len(report_data.preset_description) > 80 else report_data.preset_description],
+            ["Description", desc_paragraph],
             ["Date Handling", report_data.date_handling],
         ]
         
@@ -694,8 +695,11 @@ class PDFReportBuilder:
 
     def _add_compliance_statement(self, story, report_data: ReportData):
         """Add THAKAAMED branded compliance statement."""
-        story.append(Paragraph("🔒 COMPLIANCE STATEMENT", self.styles["SectionHeader"]))
-        story.append(HRFlowable(width="30%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
+        # Build content list to wrap in KeepTogether
+        compliance_content = []
+        
+        compliance_content.append(Paragraph("🔒 COMPLIANCE STATEMENT", self.styles["SectionHeader"]))
+        compliance_content.append(HRFlowable(width="30%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
 
         # Compliance box with teal border
         compliance_items = [
@@ -719,8 +723,8 @@ class PDFReportBuilder:
             ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
             ('LEFTPADDING', (0, 0), (-1, -1), 10),
         ]))
-        story.append(compliance_table)
-        story.append(Spacer(1, 0.15 * inch))
+        compliance_content.append(compliance_table)
+        compliance_content.append(Spacer(1, 0.15 * inch))
 
         compliance_text = """
         <font color="#1A365D">The de-identification process has modified or removed all patient identifying
@@ -728,13 +732,22 @@ class PDFReportBuilder:
         been replaced with new, consistent identifiers to maintain referential integrity
         while preventing re-identification.</font>
         """
-        story.append(Paragraph(compliance_text, self.styles["Normal"]))
-        story.append(Spacer(1, 0.4 * inch))
+        compliance_content.append(Paragraph(compliance_text, self.styles["Normal"]))
+        compliance_content.append(Spacer(1, 0.4 * inch))
+        
+        # Keep entire section together on same page
+        story.append(KeepTogether(compliance_content))
 
     def _add_signature(self, story, report_data: ReportData):
         """Add THAKAAMED branded digital signature section."""
-        story.append(Paragraph("🔐 DIGITAL SIGNATURE", self.styles["SectionHeader"]))
-        story.append(HRFlowable(width="30%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
+        # Add page break to ensure signature section starts on new page
+        story.append(PageBreak())
+        
+        # Build content list to wrap in KeepTogether
+        sig_content = []
+        
+        sig_content.append(Paragraph("🔐 DIGITAL SIGNATURE", self.styles["SectionHeader"]))
+        sig_content.append(HRFlowable(width="30%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=10, hAlign='LEFT'))
 
         hash_display = report_data.report_hash[:32] + "..." if report_data.report_hash else "N/A"
         
@@ -757,33 +770,36 @@ class PDFReportBuilder:
             ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
             ('LEFTPADDING', (0, 0), (-1, -1), 10),
         ]))
-        story.append(sig_table)
+        sig_content.append(sig_table)
         
         # Vision 2030 closing
-        story.append(Spacer(1, 0.5 * inch))
-        story.append(HRFlowable(width="100%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=15, hAlign='CENTER'))
+        sig_content.append(Spacer(1, 0.5 * inch))
+        sig_content.append(HRFlowable(width="100%", thickness=2, color=BRAND_GOLD, spaceBefore=0, spaceAfter=15, hAlign='CENTER'))
         
         # Final branded footer - Purple theme
-        story.append(Paragraph(
+        sig_content.append(Paragraph(
             "<font color='#2D1B4E' size='14'><b>THAKAAMED AI</b></font>",
             ParagraphStyle('BrandFooter', alignment=TA_CENTER)
         ))
-        story.append(Paragraph(
+        sig_content.append(Paragraph(
             "<font color='#9B8BB8' size='9'>Enterprise Healthcare Solutions</font>",
             ParagraphStyle('BrandFooterSub', alignment=TA_CENTER)
         ))
-        story.append(Spacer(1, 0.1 * inch))
-        story.append(Paragraph(
+        sig_content.append(Spacer(1, 0.1 * inch))
+        sig_content.append(Paragraph(
             "<font color='#006C35' size='10'><b>Supporting Saudi Vision 2030 Healthcare Transformation</b></font>",
             ParagraphStyle('Vision2030Footer', alignment=TA_CENTER)
         ))
-        story.append(Spacer(1, 0.15 * inch))
-        story.append(Paragraph(
+        sig_content.append(Spacer(1, 0.15 * inch))
+        sig_content.append(Paragraph(
             "<font color='#C9A227' size='9'><b>Made with ♥ in Riyadh</b></font>",
             ParagraphStyle('MadeWithLove', alignment=TA_CENTER)
         ))
-        story.append(Spacer(1, 0.05 * inch))
-        story.append(Paragraph(
+        sig_content.append(Spacer(1, 0.05 * inch))
+        sig_content.append(Paragraph(
             "<font color='#9B8BB8' size='8'>https://thakaamed.ai | contact@thakaamed.com</font>",
             ParagraphStyle('ContactInfo', alignment=TA_CENTER)
         ))
+        
+        # Keep entire signature section together
+        story.append(KeepTogether(sig_content))

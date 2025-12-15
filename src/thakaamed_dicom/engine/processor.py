@@ -79,6 +79,12 @@ class DicomProcessor:
             # Read DICOM file
             ds = dcmread(str(input_path), force=True)
 
+            # Capture study/series UIDs before modification for tracking
+            if hasattr(ds, "StudyInstanceUID") and ds.StudyInstanceUID:
+                stats.study_uid = str(ds.StudyInstanceUID)
+            if hasattr(ds, "SeriesInstanceUID") and ds.SeriesInstanceUID:
+                stats.series_uid = str(ds.SeriesInstanceUID)
+
             # Apply tag rules
             for rule in self.preset.tag_rules:
                 handler = self.action_factory.get_handler(rule.action)

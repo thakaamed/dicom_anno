@@ -29,6 +29,8 @@ class FileStatistics:
     private_tags_removed: int = 0
     error_message: str = ""
     processing_time_ms: float = 0.0
+    study_uid: str = ""
+    series_uid: str = ""
 
 
 @dataclass
@@ -66,6 +68,11 @@ class ProcessingStatistics:
                 self.total_tags_removed += stats.tags_removed
                 self.total_uids_remapped += stats.uids_remapped
                 self.total_private_tags_removed += stats.private_tags_removed
+                # Track unique studies and series
+                if stats.study_uid:
+                    self.studies_processed.add(stats.study_uid)
+                if stats.series_uid:
+                    self.series_processed.add(stats.series_uid)
             else:
                 self.files_failed += 1
                 self.errors.append(f"{stats.file_path}: {stats.error_message}")
