@@ -3,7 +3,7 @@
 #  THAKAAMED DICOM Anonymizer - Easy Installer for macOS
 #  Copyright (c) 2025 THAKAAMED AI. All rights reserved.
 #
-#  https://thakaamed.com | Enterprise Healthcare Solutions
+#  https://thakaamed.ai | Enterprise Healthcare Solutions
 #
 #  This installer sets up everything needed to run the DICOM Anonymizer
 #  on a Mac without requiring Xcode or technical knowledge.
@@ -126,6 +126,24 @@ install_uv() {
     check_arch
 }
 
+# Clear Python cache to prevent stale bytecode issues
+clear_python_cache() {
+    echo "  Clearing Python cache..."
+    
+    # Clear cache in project directory if it exists
+    if [[ -d "$PROJECT_DIR/src" ]]; then
+        find "$PROJECT_DIR/src" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+        find "$PROJECT_DIR/src" -type f -name "*.pyc" -delete 2>/dev/null || true
+    fi
+    
+    # Clear cache in installed packages
+    if [[ -d "$VENV_DIR" ]]; then
+        find "$VENV_DIR" -type d -name "__pycache__" -path "*thakaamed*" -exec rm -rf {} + 2>/dev/null || true
+    fi
+    
+    print_success "Python cache cleared"
+}
+
 # Create virtual environment and install package
 install_package() {
     print_step 2 5 "Installing DICOM Anonymizer..."
@@ -136,6 +154,9 @@ install_package() {
     # Ensure uv is in PATH
     export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
     
+    # Clear any existing cache first to prevent stale bytecode issues
+    clear_python_cache
+    
     # Check if we're running from the project directory
     if [[ -f "$PROJECT_DIR/pyproject.toml" ]]; then
         echo "  Installing from local project..."
@@ -143,9 +164,10 @@ install_package() {
         # Create venv with Python 3.11
         uv venv "$VENV_DIR" --python 3.11 2>/dev/null || uv venv "$VENV_DIR" --python 3.10
         
-        # Install the package
+        # Install the package with force reinstall to ensure fresh install
         source "$VENV_DIR/bin/activate"
-        uv pip install "$PROJECT_DIR"
+        uv pip install "$PROJECT_DIR" --force-reinstall --no-deps
+        uv pip install "$PROJECT_DIR"  # Install deps normally
         deactivate
         
         print_success "Package installed from local source"
@@ -218,6 +240,16 @@ else
     echo "Press any key to close..."
     read -n 1
     exit 1
+fi
+
+# Clear Python cache to prevent stale bytecode issues
+# This ensures the latest code is always used
+echo "Clearing cache..."
+find "$INSTALL_DIR" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+# Also clear cache in editable install source if it exists
+EDITABLE_PATH=$(python -c "import thakaamed_dicom; print(thakaamed_dicom.__file__)" 2>/dev/null | xargs dirname 2>/dev/null)
+if [[ -n "$EDITABLE_PATH" && -d "$EDITABLE_PATH" ]]; then
+    find "$EDITABLE_PATH" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 fi
 
 # Launch the GUI
