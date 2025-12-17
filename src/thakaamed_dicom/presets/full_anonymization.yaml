@@ -1,10 +1,11 @@
 # Full Anonymization Preset
 # Complete de-identification with minimal retained data
 # Maximum anonymization for high-security requirements
+# Removes ALL institutional, scanner, and patient identifiers
 
 name: "Full Anonymization"
-description: "Complete de-identification removing all identifying information per SDAIA PDPL and DICOM PS3.15. Maximum privacy for public dataset sharing."
-version: "1.0.0"
+description: "Complete de-identification removing all identifying information including scanner/institutional UIDs. Maximum privacy for public dataset sharing with complete unlinkability."
+version: "1.1.0"
 
 compliance:
   - "SDAIA PDPL (Saudi Personal Data Protection Law)"
@@ -33,6 +34,34 @@ safe_private_tags: []
 
 # Tag-specific rules - remove everything identifying
 tag_rules:
+  # ===========================================
+  # File Meta Information - Remove institutional identifiers
+  # These tags leak software/institution identity
+  # ===========================================
+  - tag: "(0002,0012)"
+    action: "X"
+    description: "Implementation Class UID - identifies software/institution"
+
+  - tag: "(0002,0013)"
+    action: "X"
+    description: "Implementation Version Name - identifies software version"
+
+  - tag: "(0002,0016)"
+    action: "X"
+    description: "Source Application Entity Title - identifies source system"
+
+  - tag: "(0002,0100)"
+    action: "X"
+    description: "Private Information Creator UID - institutional identifier"
+
+  - tag: "(0002,0102)"
+    action: "X"
+    description: "Private Information - may contain institutional data"
+
+  - tag: "(0002,0003)"
+    action: "U"
+    description: "Media Storage SOP Instance UID - must match SOP Instance UID"
+
   # ===========================================
   # Patient Module - Remove all
   # ===========================================
@@ -248,3 +277,126 @@ tag_rules:
   - tag: "(0018,700A)"
     action: "X"
     description: "Detector ID"
+
+  # ===========================================
+  # Scanner-Specific UIDs - Remove to prevent tracing
+  # These UIDs contain manufacturer-specific roots (e.g., Siemens 1.3.12.2.1107)
+  # ===========================================
+  - tag: "(0008,3010)"
+    action: "X"
+    description: "Irradiation Event UID - scanner-specific identifier"
+
+  - tag: "(0018,9185)"
+    action: "X"
+    description: "Respiratory Signal Source ID"
+
+  - tag: "(0020,9161)"
+    action: "U"
+    description: "Concatenation UID"
+
+  - tag: "(0020,9164)"
+    action: "U"
+    description: "Dimension Organization UID"
+
+  - tag: "(0028,1214)"
+    action: "X"
+    description: "Large Palette Color Lookup Table UID"
+
+  - tag: "(0040,DB0D)"
+    action: "X"
+    description: "Template Extension Organization UID"
+
+  - tag: "(0040,DB0C)"
+    action: "X"
+    description: "Template Extension Creator UID"
+
+  # ===========================================
+  # Referenced Sequences - Remove to break linkage
+  # These contain original scanner UIDs that leak identity
+  # ===========================================
+  - tag: "(0008,1111)"
+    action: "X"
+    description: "Referenced Performed Procedure Step Sequence - contains original UIDs"
+
+  - tag: "(0008,2112)"
+    action: "X"
+    description: "Source Image Sequence - contains original scanner UIDs"
+
+  - tag: "(0008,1115)"
+    action: "X"
+    description: "Referenced Series Sequence - may contain original UIDs"
+
+  - tag: "(0008,1140)"
+    action: "X"
+    description: "Referenced Image Sequence - may contain original UIDs"
+
+  - tag: "(0008,9092)"
+    action: "X"
+    description: "Referenced Image Evidence Sequence"
+
+  - tag: "(0008,9154)"
+    action: "X"
+    description: "Source Image Evidence Sequence"
+
+  - tag: "(0010,1002)"
+    action: "X"
+    description: "Other Patient IDs Sequence"
+
+  - tag: "(0040,0275)"
+    action: "X"
+    description: "Request Attributes Sequence - contains procedure IDs"
+
+  - tag: "(0040,A730)"
+    action: "X"
+    description: "Content Sequence - may contain identifying info"
+
+  # ===========================================
+  # Calibration/Protocol UIDs - Remove
+  # ===========================================
+  - tag: "(0018,1200)"
+    action: "X"
+    description: "Date of Last Calibration"
+
+  - tag: "(0018,1201)"
+    action: "X"
+    description: "Time of Last Calibration"
+
+  - tag: "(0018,9919)"
+    action: "X"
+    description: "Instruction Performed DateTime"
+
+  - tag: "(0040,0244)"
+    action: "X"
+    description: "Performed Procedure Step Start Date"
+
+  - tag: "(0040,0245)"
+    action: "X"
+    description: "Performed Procedure Step Start Time"
+
+  - tag: "(0040,0250)"
+    action: "X"
+    description: "Performed Procedure Step End Date"
+
+  - tag: "(0040,0251)"
+    action: "X"
+    description: "Performed Procedure Step End Time"
+
+  - tag: "(0040,0253)"
+    action: "X"
+    description: "Performed Procedure Step ID"
+
+  - tag: "(0040,0254)"
+    action: "X"
+    description: "Performed Procedure Step Description"
+
+  - tag: "(0040,1001)"
+    action: "X"
+    description: "Requested Procedure ID"
+
+  - tag: "(0032,1060)"
+    action: "X"
+    description: "Requested Procedure Description"
+
+  - tag: "(0032,1064)"
+    action: "X"
+    description: "Requested Procedure Code Sequence"

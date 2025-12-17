@@ -126,17 +126,34 @@ class DicomProcessor:
             if hasattr(ds, "SOPInstanceUID") and ds.SOPInstanceUID:
                 original_sop_uid = str(ds.SOPInstanceUID)
 
-            # Apply tag rules
+            # Apply tag rules to main dataset
             for rule in self.preset.tag_rules:
-                handler = self.action_factory.get_handler(rule.action)
-                if handler.apply(ds, rule.tag, rule):
-                    if rule.action == ActionCode.X:
-                        stats.tags_removed += 1
-                    else:
-                        stats.tags_modified += 1
+                tag_tuple = self._parse_tag(rule.tag)
+                
+                # Check if this is a file meta tag (0002,xxxx)
+                if tag_tuple[0] == 0x0002:
+                    # Apply to file_meta if it exists
+                    if hasattr(ds, "file_meta") and tag_tuple in ds.file_meta:
+                        handler = self.action_factory.get_handler(rule.action)
+                        if handler.apply(ds.file_meta, rule.tag, rule):
+                            if rule.action == ActionCode.X:
+                                stats.tags_removed += 1
+                            else:
+                                stats.tags_modified += 1
+                else:
+                    # Apply to main dataset
+                    handler = self.action_factory.get_handler(rule.action)
+                    if handler.apply(ds, rule.tag, rule):
+                        if rule.action == ActionCode.X:
+                            stats.tags_removed += 1
+                        else:
+                            stats.tags_modified += 1
 
             # Handle UIDs (always remap Study, Series, SOP Instance UIDs)
             stats.uids_remapped += self._handle_standard_uids(ds)
+            
+            # Recursively handle UIDs in sequences
+            stats.uids_remapped += self._handle_sequence_uids(ds)
 
             # Handle dates based on preset configuration
             self._handle_dates(ds)
@@ -203,6 +220,14 @@ class DicomProcessor:
         
         return output_dir / f"Study_{study_hash}" / f"Series_{series_hash}" / f"{sop_hash}.dcm"
 
+    @staticmethod
+    def _parse_tag(tag_str: str) -> tuple[int, int]:
+        """Parse tag string to pydicom-compatible format."""
+        # "(0010,0010)" -> (0x0010, 0x0010)
+        clean = tag_str.strip("()")
+        group, elem = clean.split(",")
+        return (int(group, 16), int(elem, 16))
+
     def _handle_standard_uids(self, ds) -> int:
         """Remap standard UIDs and return count."""
         count = 0
@@ -229,6 +254,63 @@ class DicomProcessor:
         ):
             ds.file_meta.MediaStorageSOPInstanceUID = ds.SOPInstanceUID
 
+        return count
+
+    def _handle_sequence_uids(self, ds) -> int:
+        """Recursively remap UIDs within sequences."""
+        count = 0
+        
+        # UID tags that should be remapped when found in sequences
+        uid_keywords = {
+            "ReferencedSOPInstanceUID",
+            "RelatedFrameOfReferenceUID",
+            "FrameOfReferenceUID",
+            "StudyInstanceUID",
+            "SeriesInstanceUID",
+            "SOPInstanceUID",
+            "ConcatenationUID",
+            "DimensionOrganizationUID",
+            "IrradiationEventUID",
+            "CreatorVersionUID",
+            "DeviceUID",
+            "ReferencedFrameOfReferenceUID",
+            "SynchronizationFrameOfReferenceUID",
+            "TableFrameOfReferenceUID",
+            "TransactionUID",
+            "UID",
+        }
+        
+        def process_element(elem):
+            """Process a single element, recursing into sequences."""
+            nonlocal count
+            
+            # Check if this is a UID that should be remapped
+            if hasattr(elem, "keyword") and elem.keyword in uid_keywords:
+                if elem.VR == "UI" and elem.value:
+                    # Handle multiple UIDs (UI VR can have multiple values)
+                    if isinstance(elem.value, list):
+                        new_values = []
+                        for uid in elem.value:
+                            if uid:
+                                new_values.append(self.uid_mapper.get_or_create(str(uid)))
+                                count += 1
+                        elem.value = new_values
+                    else:
+                        original = str(elem.value)
+                        if original:
+                            elem.value = self.uid_mapper.get_or_create(original)
+                            count += 1
+            
+            # Recurse into sequences
+            if elem.VR == "SQ" and elem.value:
+                for item in elem.value:
+                    for sub_elem in item:
+                        process_element(sub_elem)
+        
+        # Process all elements in the dataset
+        for elem in ds:
+            process_element(elem)
+        
         return count
 
     def _handle_dates(self, ds) -> None:
@@ -259,9 +341,31 @@ class DicomProcessor:
                         setattr(ds, tag, f"{original[:4]}0101")
 
     def _set_deidentification_markers(self, ds) -> None:
-        """Set required de-identification marker attributes."""
+        """Set required de-identification marker attributes and THAKAAMED branding."""
+        # Standard de-identification markers
         ds.PatientIdentityRemoved = "YES"
-        ds.DeidentificationMethod = f"THAKAAMED - {self.preset.name}"
+        ds.DeidentificationMethod = f"THAKAA MED Research Tools - {self.preset.name}"
+        
+        # THAKAAMED Branding - visible in DICOM viewers
+        ds.InstitutionName = "THAKAA MED Research"
+        ds.InstitutionalDepartmentName = "Medical Imaging Research"
+        ds.Manufacturer = "THAKAA MED"
+        ds.ManufacturerModelName = "THAKAAMED DICOM Anonymizer v1.0"
+        ds.StationName = "THAKAAMED"
+        
+        # Add a recognizable series/study description prefix
+        if hasattr(ds, "StudyDescription") and ds.StudyDescription:
+            ds.StudyDescription = f"[THAKAA MED] {ds.StudyDescription}"
+        else:
+            ds.StudyDescription = "[THAKAA MED] Anonymized Study"
+        
+        if hasattr(ds, "SeriesDescription") and ds.SeriesDescription:
+            ds.SeriesDescription = f"[THAKAA MED] {ds.SeriesDescription}"
+        else:
+            ds.SeriesDescription = "[THAKAA MED] Anonymized Series"
+        
+        # Add branding to image comments if supported
+        ds.ImageComments = "Processed by THAKAA MED Research Tools | https://thakaamed.com | Saudi Vision 2030"
 
     def process_directory(
         self,
@@ -271,7 +375,7 @@ class DicomProcessor:
         workers: int = 4,
         dry_run: bool = False,
         progress_callback: Callable[[int, int], None] | None = None,
-        anonymous_filenames: bool = True,
+        preserve_folder_structure: bool = True,
     ) -> ProcessingStatistics:
         """
         Process all DICOM files in directory.
@@ -283,8 +387,8 @@ class DicomProcessor:
             workers: Number of parallel workers
             dry_run: If True, don't write output files
             progress_callback: Called with (completed, total) for progress updates
-            anonymous_filenames: If True, use hash-based anonymous filenames
-                                organized by Study/Series folders
+            preserve_folder_structure: If True, preserve original folder structure
+                                       If False, use hash-based Study/Series folders
 
         Returns:
             ProcessingStatistics with aggregate results
@@ -299,7 +403,15 @@ class DicomProcessor:
             return stats
 
         def process_one(input_path: Path) -> FileStatistics:
-            if anonymous_filenames:
+            if preserve_folder_structure:
+                # Preserve original folder structure
+                rel_path = input_path.relative_to(input_dir)
+                # Ensure .dcm extension for consistency
+                if not rel_path.suffix.lower() in (".dcm", ".dicom"):
+                    rel_path = rel_path.with_suffix(".dcm")
+                output_path = output_dir / rel_path
+                return self.process_file(input_path, output_path=output_path, dry_run=dry_run)
+            else:
                 # Use anonymous hash-based naming with Study/Series folders
                 return self.process_file(
                     input_path, 
@@ -307,11 +419,6 @@ class DicomProcessor:
                     output_dir=output_dir, 
                     dry_run=dry_run
                 )
-            else:
-                # Legacy: preserve original relative path structure
-                rel_path = input_path.relative_to(input_dir)
-                output_path = output_dir / rel_path
-                return self.process_file(input_path, output_path=output_path, dry_run=dry_run)
 
         if parallel and workers > 1:
             # Parallel processing
