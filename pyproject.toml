@@ -49,6 +49,9 @@ dependencies = [
     "pyyaml>=6.0",
     "pydicom>=2.4",
     "reportlab>=4.0",
+    "pillow>=10.0",
+    "nicegui>=1.4",
+    "aiofiles>=23.0",
 ]
 
 [project.optional-dependencies]
@@ -59,9 +62,14 @@ dev = [
     "mypy>=1.0",
     "types-PyYAML",
 ]
+gui = [
+    "nicegui>=1.4",
+    "aiofiles>=23.0",
+]
 
 [project.scripts]
 thakaamed-dicom = "thakaamed_dicom.cli.main:main"
+thakaamed-dicom-gui = "thakaamed_dicom.gui.app:main"
 
 [project.urls]
 Homepage = "https://github.com/thakaamed/dicom-anonymizer"

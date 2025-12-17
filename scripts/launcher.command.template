@@ -1,0 +1,103 @@
+#!/bin/bash
+# ============================================================================
+#  THAKAAMED DICOM Anonymizer - Desktop Launcher
+#  Copyright (c) 2024 THAKAAMED AI. All rights reserved.
+#
+#  Double-click this file to start the DICOM Anonymizer.
+#  A web browser will open with the application interface.
+#
+#  https://thakaamed.com | Built for Saudi Vision 2030 Healthcare
+# ============================================================================
+
+# Configuration
+INSTALL_DIR="$HOME/.thakaamed-dicom"
+VENV_DIR="$INSTALL_DIR/venv"
+
+# Ensure PATH includes common locations
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
+
+# Terminal colors
+GREEN='\033[0;32m'
+GOLD='\033[0;33m'
+CYAN='\033[0;36m'
+RED='\033[0;31m'
+NC='\033[0m'
+BOLD='\033[1m'
+
+# Clear terminal and show startup banner
+clear
+echo ""
+echo -e "${GOLD}"
+echo "╔════════════════════════════════════════════════════════════════════════╗"
+echo "║                                                                        ║"
+echo "║     ████████╗██╗  ██╗ █████╗ ██╗  ██╗ █████╗  █████╗                   ║"
+echo "║     ╚══██╔══╝██║  ██║██╔══██╗██║ ██╔╝██╔══██╗██╔══██╗                  ║"
+echo "║        ██║   ███████║███████║█████╔╝ ███████║███████║                  ║"
+echo "║        ██║   ██╔══██║██╔══██║██╔═██╗ ██╔══██║██╔══██║                  ║"
+echo "║        ██║   ██║  ██║██║  ██║██║  ██╗██║  ██║██║  ██║                  ║"
+echo "║        ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝                  ║"
+echo "║                                                                        ║"
+echo "║                   🏥 DICOM Anonymizer                                  ║"
+echo "║                   Starting application...                              ║"
+echo "║                                                                        ║"
+echo "╚════════════════════════════════════════════════════════════════════════╝"
+echo -e "${NC}"
+echo ""
+
+# Check if installation exists
+if [[ ! -f "$VENV_DIR/bin/activate" ]]; then
+    echo -e "${RED}✗ Error: Installation not found.${NC}"
+    echo ""
+    echo "  The THAKAAMED DICOM Anonymizer is not installed."
+    echo "  Please run the installer first:"
+    echo ""
+    echo -e "  ${CYAN}curl -LsSf https://thakaamed.com/dicom/install.sh | bash${NC}"
+    echo ""
+    echo "Press any key to close this window..."
+    read -n 1
+    exit 1
+fi
+
+# Activate virtual environment
+echo -e "${CYAN}→${NC} Activating environment..."
+source "$VENV_DIR/bin/activate"
+
+# Verify the command exists
+if ! command -v thakaamed-dicom-gui &> /dev/null; then
+    echo -e "${RED}✗ Error: thakaamed-dicom-gui command not found.${NC}"
+    echo ""
+    echo "  The installation may be corrupted. Please reinstall:"
+    echo -e "  ${CYAN}curl -LsSf https://thakaamed.com/dicom/install.sh | bash${NC}"
+    echo ""
+    echo "Press any key to close this window..."
+    read -n 1
+    exit 1
+fi
+
+# Open browser to the application URL
+echo -e "${CYAN}→${NC} Opening browser..."
+(sleep 2 && open "http://127.0.0.1:8080") &
+
+# Launch the GUI server
+echo -e "${GREEN}✓${NC} Application starting on http://127.0.0.1:8080"
+echo ""
+echo -e "${BOLD}The application is now running!${NC}"
+echo ""
+echo "  • Your browser should open automatically"
+echo "  • If not, go to: http://127.0.0.1:8080"
+echo "  • Press Ctrl+C to stop the application"
+echo ""
+echo -e "${GOLD}────────────────────────────────────────────────────────────────────────${NC}"
+echo ""
+
+# Run the GUI (this will block until closed)
+thakaamed-dicom-gui
+
+# Application closed
+echo ""
+echo -e "${CYAN}Application closed.${NC}"
+echo ""
+
+# Keep window open briefly so user can see any messages
+sleep 2
+
