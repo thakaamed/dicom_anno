@@ -62,10 +62,15 @@ THAKAAMED DICOM Anonymizer is a professional-grade, cross-platform tool for de-i
 
 | Feature | Description |
 |---------|-------------|
+| **One-Line Installer** | No Xcode or Python knowledge required on macOS |
+| **Web-Based GUI** | Beautiful, beginner-friendly interface |
 | **SFDA Safe Harbor Preset** | Maximum privacy protection for regulatory compliance |
 | **Research Preset** | Balanced anonymization with date shifting for longitudinal studies |
-| **Full Anonymization** | Complete de-identification for public dataset sharing |
+| **Full Anonymization** | Complete de-identification with full UID unlinkability |
+| **Large Batch Support** | Handles 15,000+ files efficiently with optimized reports |
 | **Branded PDF Reports** | Audit-ready documentation for ethics committees |
+| **THAKAAMED Branding** | Visible branding in anonymized files for DICOM viewers |
+| **Folder Structure Preservation** | Maintains original directory hierarchy in output |
 | **Parallel Processing** | Process thousands of DICOM files in minutes |
 | **Offline Capable** | Works in air-gapped hospital networks |
 
@@ -76,10 +81,64 @@ THAKAAMED DICOM Anonymizer is a professional-grade, cross-platform tool for de-i
 - 📋 **Audit Ready**: Generate compliance reports for IRB and ethics committees
 - ⚡ **Fast & Efficient**: Multi-threaded processing for large datasets
 - 🎨 **Professional Output**: Branded reports worthy of stakeholder presentations
+- 🖥️ **Beginner Friendly**: One-click installer and web GUI for non-technical users
+
+### THAKAAMED vs RSNA CTP
+
+| Feature | THAKAAMED | RSNA CTP |
+|---------|-----------|----------|
+| **Installation** | One-line, no Java | Requires Java, complex setup |
+| **Interface** | Modern web GUI | Java desktop app |
+| **Target Users** | Researchers, clinicians | IT professionals |
+| **Setup Time** | ~2 minutes | 30+ minutes |
+| **Saudi Compliance** | SFDA/PDPL built-in | Manual configuration |
+| **Reports** | Auto PDF/JSON | Logs only |
+| **Learning Curve** | Low (click and go) | High (XML scripting) |
 
 ## Quick Start
 
-### Installation from Source
+### 🚀 One-Line macOS Installer (Recommended for Beginners)
+
+**No Xcode, no Python knowledge required!** Perfect for researchers who just want it to work.
+
+```bash
+cd /path/to/dicom_anno/scripts && bash install.sh
+```
+
+This will:
+1. ✅ Install Python runtime automatically (via `uv`)
+2. ✅ Create `~/DICOM_Input` and `~/DICOM_Anonymized` folders
+3. ✅ Add a **desktop launcher** for easy access
+4. ✅ Open a beautiful web-based GUI in your browser
+
+**After installation:**
+1. Put your DICOM files in `~/DICOM_Input`
+2. Double-click "THAKAAMED DICOM" on your Desktop
+3. Select anonymization preset → Click "ANONYMIZE"
+4. Find anonymized files in `~/DICOM_Anonymized`
+
+---
+
+### 🖥️ Web-Based GUI
+
+The GUI provides a simple, beginner-friendly interface:
+
+| Feature | Description |
+|---------|-------------|
+| **Fixed Folders** | Input: `~/DICOM_Input` → Output: `~/DICOM_Anonymized` |
+| **3 Presets** | SFDA Safe Harbor, Research, Full Anonymization |
+| **Progress Tracking** | Real-time progress bar and file count |
+| **Auto Reports** | PDF and JSON reports generated automatically |
+| **Large Batch Support** | Handles 15,000+ files efficiently |
+
+To launch the GUI manually:
+```bash
+thakaamed-dicom-gui
+```
+
+---
+
+### Installation from Source (Advanced)
 
 > **Note:** This package is not yet published to PyPI. Install from source using the steps below.
 
@@ -599,20 +658,70 @@ THAKAAMED DICOM Anonymizer is designed with **Saudi regulatory compliance as the
 | **HIPAA Safe Harbor** | 45 CFR 164.514(b)(2) de-identification method | ✅ Compliant |
 | **GDPR Art. 89** | Research exemption requirements | ✅ Ready |
 
-### De-identification Markers
+### De-identification Markers & THAKAAMED Branding
 
-All processed files include DICOM compliance markers:
+All processed files include DICOM compliance markers and THAKAAMED branding visible in DICOM viewers:
+
 ```
 PatientIdentityRemoved (0012,0062) = "YES"
-DeidentificationMethod (0012,0063) = "THAKAAMED - SFDA Safe Harbor"
+DeidentificationMethod (0012,0063) = "THAKAA MED Research Tools - [Preset Name]"
+InstitutionName        (0008,0080) = "THAKAA MED Research"
+Manufacturer           (0008,0070) = "THAKAA MED"
+StationName            (0008,1010) = "THAKAAMED"
+StudyDescription       (0008,1030) = "[THAKAA MED] Anonymized Study"
+SeriesDescription      (0008,103E) = "[THAKAA MED] Anonymized Series"
+ImageComments          (0020,4000) = "Processed by THAKAA MED Research Tools | https://thakaamed.ai | Saudi Vision 2030"
 ```
 
-### UID Remapping
+This branding helps researchers:
+- ✅ Identify anonymized files in DICOM viewers
+- ✅ Track provenance of processed datasets
+- ✅ Demonstrate compliance to ethics committees
 
-UIDs are consistently remapped using:
-- SHA-256 hash-based deterministic mapping
-- 2.25 (UUID) root format for new UIDs
-- Cross-file consistency for referential integrity (multi-study support)
+### UID Remapping & Full Unlinkability
+
+UIDs are consistently remapped for **complete unlinkability**:
+
+| UID Type | Handling | Description |
+|----------|----------|-------------|
+| **Study Instance UID** | Remapped | New 2.25 UUID-based UID |
+| **Series Instance UID** | Remapped | New 2.25 UUID-based UID |
+| **SOP Instance UID** | Remapped | New 2.25 UUID-based UID |
+| **Frame of Reference UID** | Remapped | New 2.25 UUID-based UID |
+| **Referenced SOP Instance UID** | Remapped | Consistent across sequences |
+| **Media Storage SOP Instance UID** | Synced | Matches SOP Instance UID |
+| **SOP Class UID** | Kept | Required for DICOM compliance |
+| **Implementation Class UID** | Removed | Institutional identifier |
+| **Irradiation Event UID** | Removed | Scanner-specific identifier |
+
+**Key Features:**
+- ✅ **2.25 (UUID) root format** - Universal, untraceable identifiers
+- ✅ **Cross-file consistency** - Same original UID always maps to same new UID
+- ✅ **Sequence processing** - UIDs in nested sequences are also remapped
+- ✅ **Institutional IDs removed** - Implementation Class UID, Source AE Title, etc.
+
+---
+
+### Large Batch Processing (15,000+ Files)
+
+Optimized for enterprise-scale anonymization:
+
+| Feature | Description |
+|---------|-------------|
+| **Memory Efficient** | Limited records in reports prevent memory issues |
+| **Separate UID Mapping** | Full mapping saved to `uid_mapping_full_*.json` |
+| **Progress Tracking** | Real-time progress in GUI and CLI |
+| **Error Resilience** | Report failures don't block anonymization |
+
+**Output for large batches:**
+```
+~/DICOM_Anonymized/
+├── [anonymized files with original folder structure]
+└── reports/
+    ├── anonymization_report_*.pdf      # Summary (first 50 files)
+    ├── anonymization_report_*.json     # Summary (500 records, 1000 UIDs)
+    └── uid_mapping_full_*.json         # FULL UID mapping for audit
+```
 
 ## License
 
