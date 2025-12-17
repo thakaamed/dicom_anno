@@ -314,31 +314,49 @@ class DicomAnonymizerApp:
             report_dir = OUTPUT_FOLDER / "reports"
             report_dir.mkdir(exist_ok=True)
             
-            generator = ReportGenerator()
-            generator.generate(
-                stats=self.stats,
-                preset=preset_config,
-                input_path=str(INPUT_FOLDER),
-                output_path=str(OUTPUT_FOLDER),
-                uid_mapping=processor.uid_mapper.export_mapping(),
-                report_dir=report_dir,
-                formats=[ReportFormat.PDF, ReportFormat.JSON],
-            )
+            # Try to generate reports - don't let report failure block the process
+            report_error = None
+            try:
+                generator = ReportGenerator()
+                generated_files = generator.generate(
+                    stats=self.stats,
+                    preset=preset_config,
+                    input_path=str(INPUT_FOLDER),
+                    output_path=str(OUTPUT_FOLDER),
+                    uid_mapping=processor.uid_mapper.export_mapping(),
+                    report_dir=report_dir,
+                    formats=[ReportFormat.PDF, ReportFormat.JSON],
+                )
+                print(f"✅ Reports generated: {generated_files}")
+            except Exception as report_exc:
+                report_error = str(report_exc)
+                # Log the full error for debugging
+                import traceback
+                error_log = report_dir / "report_error.log"
+                with open(error_log, "w") as f:
+                    f.write(f"Report generation failed at {__import__('datetime').datetime.now()}\n")
+                    f.write(f"Error: {report_error}\n\n")
+                    f.write("Full traceback:\n")
+                    traceback.print_exc(file=f)
+                print(f"⚠️ Report generation failed: {report_error}")
+                print(f"   Error log saved to: {error_log}")
             
             self.progress_bar.value = 1.0
             self.status_label.text = "Complete!"
             
-            # Show results
-            self._show_results()
+            # Show results (even if reports failed)
+            self._show_results(report_error=report_error)
             
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             ui.notify(f"Error: {str(e)}", type="negative")
             self.status_label.text = f"Error: {str(e)}"
         finally:
             self.processing = False
             self._update_button_state()
 
-    def _show_results(self):
+    def _show_results(self, report_error: str | None = None):
         """Display the processing results."""
         self.results_container.set_visibility(True)
         self.results_container.clear()
@@ -348,6 +366,13 @@ class DicomAnonymizerApp:
                 with ui.row().classes("items-center justify-center gap-4 mb-4"):
                     ui.html("<div class='success-icon'>✅</div>", sanitize=False)
                     ui.label("Anonymization Complete!").classes("text-2xl font-bold text-green-700")
+                
+                # Show warning if report generation failed
+                if report_error:
+                    with ui.card().classes("w-full bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-4"):
+                        ui.label("⚠️ Report generation failed").classes("text-yellow-800 font-semibold")
+                        ui.label(f"Error: {report_error}").classes("text-yellow-700 text-sm")
+                        ui.label("Files were anonymized successfully. Check ~/DICOM_Anonymized/reports/report_error.log for details.").classes("text-yellow-600 text-xs mt-1")
                 
                 # Stats grid
                 if self.stats:
