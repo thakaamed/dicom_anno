@@ -83,6 +83,9 @@ class ReportData:
 
     # UID mapping (for audit)
     uid_mapping: dict[str, str] = field(default_factory=dict)
+    
+    # Notes (e.g., truncation warnings for large batches)
+    notes: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         """Convert to dictionary for JSON serialization."""
@@ -115,6 +118,7 @@ class ReportData:
             "tag_rules_applied": self.tag_rules_applied,
             "errors": self.errors,
             "uid_mapping": self.uid_mapping,
+            "notes": self.notes,
         }
 
     @staticmethod

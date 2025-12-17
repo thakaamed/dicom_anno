@@ -62,19 +62,37 @@ class ReportGenerator:
             List of generated report file paths
         """
         formats = formats or [ReportFormat.ALL]
+        
+        # Generate timestamp for filenames
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        report_dir.mkdir(parents=True, exist_ok=True)
+        generated = []
+        
+        # For large batches, save full UID mapping to a separate file first
+        # This ensures we don't lose it even if report generation fails
+        if len(uid_mapping) > 1000:
+            try:
+                uid_mapping_path = report_dir / f"uid_mapping_full_{timestamp}.json"
+                with open(uid_mapping_path, "w", encoding="utf-8") as f:
+                    json.dump({
+                        "generated_at": datetime.now().isoformat(),
+                        "total_mappings": len(uid_mapping),
+                        "note": "Full UID mapping for audit trail. Report contains truncated version.",
+                        "mappings": uid_mapping,
+                    }, f, indent=2)
+                generated.append(uid_mapping_path)
+                print(f"  📋 Full UID mapping saved ({len(uid_mapping):,} entries)")
+            except Exception as e:
+                print(f"  ⚠️ Could not save full UID mapping: {e}")
 
-        # Build report data
+        # Build report data (with limits for large batches)
         report_data = self._build_report_data(stats, preset, input_path, output_path, uid_mapping)
 
         # Calculate hash
         report_data.report_hash = self._calculate_hash(report_data)
 
-        # Generate timestamp for filenames
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # Base name for report files
         base_name = f"anonymization_report_{timestamp}"
-
-        report_dir.mkdir(parents=True, exist_ok=True)
-        generated = []
 
         # Determine which formats to generate
         should_generate = {
@@ -171,11 +189,31 @@ class ReportGenerator:
         input_path: str,
         output_path: str,
         uid_mapping: dict,
+        max_file_records: int = 500,
+        max_uid_mappings: int = 1000,
     ) -> ReportData:
-        """Build ReportData from processing results."""
-        # Build file records from stats
+        """Build ReportData from processing results.
+        
+        For large batches (1000+ files), we limit the detailed records
+        to prevent memory issues and keep reports manageable.
+        """
+        # Build file records from stats (limit for large batches)
         file_records = []
-        for file_stat in stats.file_stats:
+        total_files = len(stats.file_stats)
+        
+        # For large batches, only include first N records + failed ones
+        if total_files > max_file_records:
+            # Always include failed files first
+            failed_stats = [s for s in stats.file_stats if not s.success]
+            success_stats = [s for s in stats.file_stats if s.success]
+            
+            # Take all failed + first N successful
+            remaining_slots = max(0, max_file_records - len(failed_stats))
+            stats_to_include = failed_stats + success_stats[:remaining_slots]
+        else:
+            stats_to_include = stats.file_stats
+        
+        for file_stat in stats_to_include:
             record = FileRecord(
                 original_path=file_stat.file_path,
                 output_path="",  # Not tracked in current stats
@@ -198,6 +236,24 @@ class ReportGenerator:
             {"tag": rule.tag, "action": rule.action.value, "description": rule.description or ""}
             for rule in preset.tag_rules
         ]
+        
+        # Limit UID mapping size for reports (full mapping saved separately)
+        limited_uid_mapping = uid_mapping
+        notes = []
+        
+        if total_files > max_file_records:
+            notes.append(
+                f"Large batch: Showing {len(stats_to_include):,} of {total_files:,} file records. "
+                f"All files were processed successfully."
+            )
+        
+        if len(uid_mapping) > max_uid_mappings:
+            # Take first N mappings for the report
+            limited_uid_mapping = dict(list(uid_mapping.items())[:max_uid_mappings])
+            notes.append(
+                f"UID mapping truncated: Showing {max_uid_mappings:,} of {len(uid_mapping):,} mappings. "
+                f"Full mapping saved to uid_mapping_full_*.json"
+            )
 
         return ReportData(
             report_id=str(uuid.uuid4()),
@@ -221,8 +277,9 @@ class ReportGenerator:
             processing_time_seconds=stats.processing_time.total_seconds(),
             file_records=file_records,
             tag_rules_applied=tag_rules,
-            errors=stats.errors,
-            uid_mapping=uid_mapping,
+            errors=stats.errors[:100] if len(stats.errors) > 100 else stats.errors,  # Limit errors too
+            uid_mapping=limited_uid_mapping,
+            notes=notes,
         )
 
     def _calculate_hash(self, report_data: ReportData) -> str:
