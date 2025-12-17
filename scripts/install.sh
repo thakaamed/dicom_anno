@@ -277,7 +277,7 @@ launch_app() {
     echo -e "    • Run: ${CYAN}thakaamed-dicom-gui${NC}"
     echo ""
     echo -e "  ${PURPLE}Built for Saudi Vision 2030 Healthcare${NC}"
-    echo -e "  ${CYAN}https://thakaamed.com${NC}"
+    echo -e "  ${CYAN}https://thakaamed.ai${NC}"
     echo ""
     
     # Ask if user wants to launch now

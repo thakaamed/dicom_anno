@@ -365,7 +365,16 @@ class DicomProcessor:
             ds.SeriesDescription = "[THAKAA MED] Anonymized Series"
         
         # Add branding to image comments if supported
-        ds.ImageComments = "Processed by THAKAA MED Research Tools | https://thakaamed.com | Saudi Vision 2030"
+        ds.ImageComments = "Processed by THAKAA MED Research Tools | https://thakaamed.ai | Saudi Vision 2030"
+        
+        # Remove acquisition date/time for privacy
+        acquisition_tags = [
+            "AcquisitionDate", "AcquisitionTime", "AcquisitionDateTime",
+            "ContentDate", "ContentTime", "InstanceCreationDate", "InstanceCreationTime"
+        ]
+        for tag in acquisition_tags:
+            if hasattr(ds, tag):
+                setattr(ds, tag, "")
 
     def process_directory(
         self,

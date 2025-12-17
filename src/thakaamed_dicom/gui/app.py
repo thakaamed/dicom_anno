@@ -396,11 +396,11 @@ class DicomAnonymizerApp:
         """Build the footer."""
         ui.html("""
             <div class='footer'>
-                <p>© 2025 <a href='https://thakaamed.com' target='_blank'>THAKAAMED AI</a> • 
+                <p>© 2025 <a href='https://thakaamed.ai' target='_blank'>THAKAAMED AI</a> • 
                 Built for Saudi Vision 2030 Healthcare Transformation</p>
                 <p style='margin-top: 0.5rem; font-size: 0.8rem;'>
                     For research and educational purposes only • 
-                    <a href='mailto:licensing@thakaamed.com'>Commercial licensing</a>
+                    <a href='mailto:licensing@thakaamed.ai'>Commercial licensing</a>
                 </p>
             </div>
         """, sanitize=False)
